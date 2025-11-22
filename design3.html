@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CloudyMagine | Architects of the Invisible</title>
+    <meta name="description" content="Agence digitale haute performance. Nous construisons des écosystèmes numériques neuro-optimisés pour les marques d'élite.">
+    <meta name="theme-color" content="#030304">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;800&family=Outfit:wght@100;300;500;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        mono: ['Space Grotesk', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#CE8FFF',      
+                        secondary: '#E490FF',    
+                        accent: '#00F0FF',
+                        dark: '#030304',         
+                        surface: '#0A0A0C',      
+                        glass: 'rgba(255, 255, 255, 0.03)',
+                        'glass-high': 'rgba(255, 255, 255, 0.08)',
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                        'hero-glow': 'conic-gradient(from 180deg at 50% 50%, #CE8FFF22 0deg, #E490FF22 180deg, #CE8FFF22 360deg)',
+                    },
+                    animation: {
+                        'float': 'float 8s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --cursor-size: 20px;
+            --primary-rgb: 206, 143, 255;
+            --easing: cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        * { box-sizing: border-box; cursor: none; }
+        
+        body {
+            background-color: #030304;
+            color: #e2e2e2;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Scrollbar invisible mais fonctionnelle (gérée par JS Smooth Scroll) */
+        ::-webkit-scrollbar { width: 0px; background: transparent; }
+
+        /* --- BACKGROUND LAYERS --- */
+        .layer-noise {
+            position: fixed; inset: 0; width: 100%; height: 100%; z-index: 90; pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.08; mix-blend-mode: overlay;
+        }
+
+        .layer-vignette {
+            position: fixed; inset: 0; z-index: 80; pointer-events: none;
+            background: radial-gradient(circle at center, transparent 0%, #030304 120%);
+        }
+
+        .layer-canvas {
+            position: fixed; inset: 0; z-index: 0; pointer-events: none;
+        }
+
+        /* --- TYPOGRAPHY & UTILS --- */
+        .text-gradient {
+            background: linear-gradient(to right, #fff 20%, #CE8FFF 50%, #E490FF 80%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-size: 200% auto; animation: shine 5s linear infinite;
+        }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- CUSTOM CURSOR --- */
+        #cursor {
+            position: fixed; top: 0; left: 0; width: var(--cursor-size); height: var(--cursor-size);
+            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 50%; pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%); transition: width 0.3s var(--easing), height 0.3s var(--easing), background-color 0.3s;
+            mix-blend-mode: difference;
+        }
+        #cursor-dot {
+            position: fixed; top: 0; left: 0; width: 4px; height: 4px; background: white;
+            border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+        }
+        .magnet-active #cursor { width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-color: transparent; backdrop-filter: blur(2px); }
+
+        /* --- PAGE TRANSITIONS --- */
+        #loader {
+            position: fixed; inset: 0; background: #030304; z-index: 10000;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            transition: transform 1s cubic-bezier(0.87, 0, 0.13, 1);
+        }
+        .loader-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 20px; position: relative; overflow: hidden; }
+        .loader-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: #CE8FFF; transition: width 0.2s; }
+        
+        .page-content { opacity: 0; transform: translateY(50px); transition: opacity 1s ease, transform 1s var(--easing); }
+        .page-content.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- COMPONENTS --- */
+        /* Magnetic Button */
+        .btn-magnetic { position: relative; display: inline-flex; overflow: hidden; transition: transform 0.3s; }
+        .btn-magnetic:hover .btn-fill { transform: translateY(0); }
+        .btn-fill { position: absolute; inset: 0; background: white; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.7, 0, 0.3, 1); z-index: -1; }
+        
+        /* Marquee */
+        .marquee-wrap { overflow: hidden; white-space: nowrap; position: relative; }
+        .marquee-inner { display: inline-block; animation: marquee 30s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Scramble Text */
+        .scramble-hover:hover { color: #CE8FFF; }
+
+        /* Card Hover 3D */
+        .card-3d { transform-style: preserve-3d; perspective: 1000px; }
+        .card-content { transition: transform 0.1s; transform-style: preserve-3d; }
+    </style>
+</head>
+<body class="font-sans">
+
+    <div class="layer-noise"></div>
+    <div class="layer-vignette"></div>
+    <canvas id="particle-canvas" class="layer-canvas"></canvas>
+    
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
+
+    <div id="loader">
+        <img src="logo_icon.png" class="w-16 h-auto mb-4 animate-pulse" alt="CM Logo">
+        <div class="font-mono text-[10px] tracking-[0.3em] text-gray-500 uppercase" id="loader-status">Initialisation du système</div>
+        <div class="loader-bar"><div class="loader-progress" id="loader-bar"></div></div>
+    </div>
+
+    <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 glass-panel px-2 py-2 rounded-full flex items-center gap-2 transition-all duration-500 hover:px-6 hover:gap-4">
+        <button onclick="router.go('home')" class="nav-item w-12 h-12 rounded-full flex flex-col items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group relative" data-magnet="true">
+            <i class="fa-solid fa-house text-lg mb-1 group-hover:-translate-y-1 transition-transform"></i>
+            <span class="text-[8px] uppercase font-bold absolute bottom-1 opacity-0 group-hover:opacity-100 transition-opacity">Studio</span>
+        </button>
+        <button onclick="router.go('agency')" class="nav-item w-12 h-12 rounded-full flex flex-col items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group relative" data-magnet="true">
+            <i class="fa-solid fa-users text-lg mb-1 group-hover:-translate-y-1 transition-transform"></i>
+            <span class="text-[8px] uppercase font-bold absolute bottom-1 opacity-0 group-hover:opacity-100 transition-opacity">Agence</span>
+        </button>
+        <div class="w-16 h-16 -mt-8 bg-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.3)] cursor-pointer hover:scale-110 transition-transform" onclick="router.go('start')" data-magnet="true">
+            <img src="logo_icon.png" class="w-8 h-8 brightness-0">
+        </div>
+        <button onclick="router.go('portfolio')" class="nav-item w-12 h-12 rounded-full flex flex-col items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group relative" data-magnet="true">
+            <i class="fa-solid fa-layer-group text-lg mb-1 group-hover:-translate-y-1 transition-transform"></i>
+            <span class="text-[8px] uppercase font-bold absolute bottom-1 opacity-0 group-hover:opacity-100 transition-opacity">Projets</span>
+        </button>
+        <button onclick="router.go('dashboard')" class="nav-item w-12 h-12 rounded-full flex flex-col items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group relative" data-magnet="true">
+            <i class="fa-solid fa-lock text-lg mb-1 group-hover:-translate-y-1 transition-transform"></i>
+            <span class="text-[8px] uppercase font-bold absolute bottom-1 opacity-0 group-hover:opacity-100 transition-opacity">Client</span>
+        </button>
+    </nav>
+
+    <button id="audio-toggle" class="fixed top-8 right-8 z-50 w-10 h-10 glass-panel rounded-full flex items-center justify-center text-gray-400 hover:text-primary transition-colors" onclick="audioEngine.toggle()">
+        <i class="fa-solid fa-volume-xmark"></i>
+    </button>
+
+    <div id="scroll-container" class="w-full absolute top-0 left-0">
+        
+        <main id="page-home" class="page-content min-h-screen w-full relative">
+            
+            <section class="h-screen flex items-center justify-center relative overflow-hidden">
+                <div class="absolute inset-0 z-[-1] animate-pulse-slow opacity-40">
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-primary/10 rounded-full blur-[150px]"></div>
+                </div>
+                <div class="absolute inset-0 z-[-2] opacity-60 mix-blend-screen animate-float">
+                    <img src="image_2.png" class="w-full h-full object-cover scale-110" alt="Cosmos">
+                </div>
+
+                <div class="text-center z-10 px-6">
+                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl mb-12 hover:border-primary/50 transition-colors">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+                        </span>
+                        <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-gray-300">Disponible pour Q4 2025</span>
+                    </div>
+
+                    <h1 class="text-7xl md:text-[10rem] font-display font-bold leading-[0.85] tracking-tighter mb-8 mix-blend-exclusion">
+                        <span class="block reveal-text" data-delay="0.1">Digital</span>
+                        <span class="block reveal-text text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-gray-600" data-delay="0.2">Alchemy.</span>
+                    </h1>
+
+                    <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-16 reveal-text" data-delay="0.4">
+                        Nous ne construisons pas des sites web. Nous architecturons des avantages concurrentiels déloyaux en fusionnant design cognitif et ingénierie brute.
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row justify-center gap-6 reveal-text" data-delay="0.6">
+                        <button onclick="router.go('start')" class="btn-magnetic px-10 py-4 rounded-full bg-white text-black font-bold text-sm uppercase tracking-widest hover:bg-gray-200 transition-colors" data-magnet="true">
+                            Lancer le projet
+                        </button>
+                        <button onclick="router.go('portfolio')" class="btn-magnetic px-10 py-4 rounded-full border border-white/20 text-white font-bold text-sm uppercase tracking-widest hover:bg-white/5 transition-colors" data-magnet="true">
+                            Voir les preuves
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-12 border-y border-white/5 bg-black/20 backdrop-blur-sm">
+                <div class="marquee-wrap">
+                    <div class="marquee-inner flex gap-16 items-center opacity-40">
+                        <span class="text-4xl font-display font-bold text-stroke">REACT</span>
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                        <span class="text-4xl font-display font-bold text-stroke">WEBGL</span>
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                        <span class="text-4xl font-display font-bold text-stroke">THREE.JS</span>
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                        <span class="text-4xl font-display font-bold text-stroke">NODE</span>
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                        <span class="text-4xl font-display font-bold text-stroke">PYTHON</span>
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                        <span class="text-4xl font-display font-bold text-stroke">AI/LLM</span>
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                        <span class="text-4xl font-display font-bold text-stroke">REACT</span>
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                        <span class="text-4xl font-display font-bold text-stroke">WEBGL</span>
+                        <i class="fa-solid fa-bolt text-primary"></i>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-32 px-6 max-w-[1600px] mx-auto">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <div class="lg:col-span-4 sticky top-32 h-fit">
+                        <span class="text-primary font-mono text-xs uppercase tracking-widest mb-4 block">Expertise</span>
+                        <h2 class="text-5xl font-display font-bold mb-6">La Trinité<br>Digitale.</h2>
+                        <p class="text-gray-400 leading-relaxed mb-8">
+                            Nous avons banni les silos. Design, Code et Marketing sont une seule et même discipline chez CloudyMagine.
+                        </p>
+                        <ul class="space-y-4 font-mono text-sm text-gray-500">
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Approche Atomique</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Performance < 90ms</li>
+                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Conversion First</li>
+                        </ul>
+                    </div>
+                    <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="glass-panel p-10 rounded-[2rem] group hover:bg-white/5 transition-all duration-500" data-magnet="true">
+                            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl text-primary mb-8 group-hover:scale-110 transition-transform"><i class="fa-solid fa-cube"></i></div>
+                            <h3 class="text-2xl font-bold mb-4">Branding Systémique</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Nous ne dessinons pas des logos. Nous créons des langages visuels complets qui s'adaptent à tous les supports, du favicon au billboard 4K.</p>
+                        </div>
+                        <div class="glass-panel p-10 rounded-[2rem] group hover:bg-white/5 transition-all duration-500" data-magnet="true">
+                            <div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center text-2xl text-secondary mb-8 group-hover:scale-110 transition-transform"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                            <h3 class="text-2xl font-bold mb-4">Ingénierie Créative</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Utilisation de WebGL et d'animations fluides pour retenir l'attention. Le code est notre pinceau le plus puissant.</p>
+                        </div>
+                        <div class="glass-panel p-10 rounded-[2rem] group hover:bg-white/5 transition-all duration-500" data-magnet="true">
+                            <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center text-2xl text-accent mb-8 group-hover:scale-110 transition-transform"><i class="fa-solid fa-bullseye"></i></div>
+                            <h3 class="text-2xl font-bold mb-4">Acquisition (Ads)</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Le plus beau site du monde ne sert à rien si personne ne le voit. Nous pilotons vos campagnes Meta/Google avec une rigueur mathématique.</p>
+                        </div>
+                        <div class="glass-panel p-10 rounded-[2rem] group hover:bg-white/5 transition-all duration-500" data-magnet="true">
+                            <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-2xl text-white mb-8 group-hover:scale-110 transition-transform"><i class="fa-solid fa-video"></i></div>
+                            <h3 class="text-2xl font-bold mb-4">Post-Production</h3>
+                            <p class="text-gray-400 text-sm leading-relaxed">Montage rythmé, Sound Design immersif, Color Grading cinéma. Nous transformons vos rushs en dopamine.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="py-20 border-y border-white/5">
+                <div class="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+                    <div>
+                        <div class="text-5xl font-display font-bold text-white mb-2" data-counter="150">0</div>
+                        <div class="text-xs font-mono uppercase text-gray-500 tracking-widest">Projets Livrés</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-display font-bold text-primary mb-2" data-counter="20">0</div>
+                        <div class="text-xs font-mono uppercase text-gray-500 tracking-widest">Pays Touchés</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-display font-bold text-secondary mb-2" data-counter="98">0</div>
+                        <div class="text-xs font-mono uppercase text-gray-500 tracking-widest">% Satisfaction</div>
+                    </div>
+                    <div>
+                        <div class="text-5xl font-display font-bold text-accent mb-2" data-counter="3">0</div>
+                        <div class="text-xs font-mono uppercase text-gray-500 tracking-widest">Années d'Exp.</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <main id="page-agency" class="page-content min-h-screen w-full hidden pt-32 px-6">
+            <div class="max-w-[1400px] mx-auto">
+                <div class="mb-20">
+                    <h1 class="text-6xl md:text-8xl font-display font-bold mb-6">L'Agence.</h1>
+                    <p class="text-xl text-gray-400 max-w-2xl">Basée entre Bordeaux et la Norvège. Le chaud et le froid. La passion et la rigueur.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32">
+                    <div class="glass-panel p-12 rounded-[3rem] relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <h3 class="text-3xl font-bold mb-4">Bastien</h3>
+                        <p class="text-sm font-mono text-primary mb-6">CREATIVE DIRECTOR</p>
+                        <p class="text-gray-400 leading-relaxed mb-8">L'œil esthétique. Obsédé par le détail qui tue, la typographie parfaite et le mouvement fluide. Il s'assure que chaque pixel justifie son existence.</p>
+                        <div class="flex gap-4">
+                            <span class="px-3 py-1 rounded-full bg-white/5 text-xs">Design</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 text-xs">Vision</span>
+                        </div>
+                    </div>
+                    <div class="glass-panel p-12 rounded-[3rem] relative overflow-hidden group">
+                        <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                        <h3 class="text-3xl font-bold mb-4">Pierre</h3>
+                        <p class="text-sm font-mono text-secondary mb-6">TECH LEAD</p>
+                        <p class="text-gray-400 leading-relaxed mb-8">Le cerveau logique. Expert en infrastructures complexes et optimisation. Il transforme les rêves visuels de Bastien en code performant.</p>
+                        <div class="flex gap-4">
+                            <span class="px-3 py-1 rounded-full bg-white/5 text-xs">Dev</span>
+                            <span class="px-3 py-1 rounded-full bg-white/5 text-xs">Scale</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-l-2 border-white/10 pl-10 ml-4 md:ml-20 mb-32">
+                    <h4 class="text-sm font-mono uppercase text-gray-500 mb-6">Manifesto 2025</h4>
+                    <p class="text-2xl md:text-4xl font-light leading-snug text-gray-300">
+                        "Nous croyons que le design n'est pas de l'art. L'art pose des questions, le design apporte des solutions. Dans un monde saturé de bruit, <span class="text-white font-bold">le silence d'une interface parfaite</span> est le bruit le plus fort que vous puissiez faire."
+                    </p>
+                </div>
+            </div>
+        </main>
+
+        <main id="page-portfolio" class="page-content min-h-screen w-full hidden pt-32 px-6">
+            <div class="max-w-[1600px] mx-auto">
+                <div class="flex justify-between items-end mb-20 border-b border-white/10 pb-10">
+                    <h1 class="text-6xl font-display font-bold">Œuvres.</h1>
+                    <div class="flex gap-2">
+                        <button class="px-4 py-2 rounded-full bg-white text-black text-xs font-bold uppercase">Tous</button>
+                        <button class="px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 text-xs font-bold uppercase">Web</button>
+                        <button class="px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 text-xs font-bold uppercase">Branding</button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pb-32">
+                    
+                    <div onclick="openModal(0)" class="group relative h-[600px] cursor-pointer overflow-hidden rounded-[2rem]" data-magnet="true">
+                        <img src="images/BMJ/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" alt="Project">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <span class="text-primary font-mono text-xs uppercase tracking-widest mb-2 block">Youtube Growth</span>
+                                    <h2 class="text-5xl font-display font-bold mb-2">BMJ Prod</h2>
+                                    <p class="text-gray-400 text-sm max-w-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">Refonte complète de l'identité visuelle pour une chaîne à 1M d'abonnés.</p>
+                                </div>
+                                <div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
+                                    <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div onclick="openModal(1)" class="group relative h-[600px] cursor-pointer overflow-hidden rounded-[2rem]" data-magnet="true">
+                        <img src="images/SUKO/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" alt="Project">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <span class="text-secondary font-mono text-xs uppercase tracking-widest mb-2 block">Beverage Branding</span>
+                                    <h2 class="text-5xl font-display font-bold mb-2">Suko Drinks</h2>
+                                    <p class="text-gray-400 text-sm max-w-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">Packaging et stratégie de lancement pour boisson énergisante.</p>
+                                </div>
+                                <div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
+                                    <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div onclick="openModal(2)" class="group relative h-[600px] cursor-pointer overflow-hidden rounded-[2rem]" data-magnet="true">
+                        <img src="images/CM/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" alt="Project">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <span class="text-accent font-mono text-xs uppercase tracking-widest mb-2 block">Web Experience</span>
+                                    <h2 class="text-5xl font-display font-bold mb-2">CloudyMagine</h2>
+                                    <p class="text-gray-400 text-sm max-w-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">Notre propre vitrine digitale. L'art de l'invisible.</p>
+                                </div>
+                                <div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
+                                    <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div onclick="openModal(3)" class="group relative h-[600px] cursor-pointer overflow-hidden rounded-[2rem]" data-magnet="true">
+                        <img src="images/TLPB/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" alt="Project">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                            <div class="flex justify-between items-end">
+                                <div>
+                                    <span class="text-white font-mono text-xs uppercase tracking-widest mb-2 block">Merchandise</span>
+                                    <h2 class="text-5xl font-display font-bold mb-2">TLPB</h2>
+                                    <p class="text-gray-400 text-sm max-w-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">Direction artistique et textile pour groupe de rock.</p>
+                                </div>
+                                <div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
+                                    <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-500"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <main id="page-start" class="page-content min-h-screen w-full hidden flex items-center justify-center pt-20 px-6 bg-surface">
+            <div class="w-full max-w-3xl">
+                <div class="mb-12">
+                    <div class="flex items-center gap-4 mb-4 text-sm font-mono text-gray-500">
+                        <span id="step-indicator-1" class="text-primary">01. Brief</span>
+                        <span class="w-8 h-px bg-white/10"></span>
+                        <span id="step-indicator-2">02. Budget</span>
+                        <span class="w-8 h-px bg-white/10"></span>
+                        <span id="step-indicator-3">03. Contact</span>
+                    </div>
+                    <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                        <div id="progress-bar" class="h-full bg-primary w-1/3 transition-all duration-500"></div>
+                    </div>
+                </div>
+
+                <div id="form-step-1" class="form-step block">
+                    <h2 class="text-5xl font-display font-bold mb-10">Que construisons-nous ?</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <button onclick="formEngine.select('type', 'Site Web', 2)" class="text-left p-8 glass-panel rounded-2xl hover:border-primary transition-all group">
+                            <i class="fa-solid fa-globe text-3xl text-gray-600 group-hover:text-primary mb-4 transition-colors"></i>
+                            <h3 class="text-xl font-bold">Site Expérientiel</h3>
+                        </button>
+                        <button onclick="formEngine.select('type', 'Branding', 2)" class="text-left p-8 glass-panel rounded-2xl hover:border-secondary transition-all group">
+                            <i class="fa-solid fa-fingerprint text-3xl text-gray-600 group-hover:text-secondary mb-4 transition-colors"></i>
+                            <h3 class="text-xl font-bold">Identité de Marque</h3>
+                        </button>
+                        <button onclick="formEngine.select('type', 'Video', 2)" class="text-left p-8 glass-panel rounded-2xl hover:border-accent transition-all group">
+                            <i class="fa-solid fa-play text-3xl text-gray-600 group-hover:text-accent mb-4 transition-colors"></i>
+                            <h3 class="text-xl font-bold">Production Vidéo</h3>
+                        </button>
+                        <button onclick="formEngine.select('type', 'Autre', 2)" class="text-left p-8 glass-panel rounded-2xl hover:border-white transition-all group">
+                            <i class="fa-solid fa-asterisk text-3xl text-gray-600 group-hover:text-white mb-4 transition-colors"></i>
+                            <h3 class="text-xl font-bold">Autre Demande</h3>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="form-step-2" class="form-step hidden">
+                    <h2 class="text-5xl font-display font-bold mb-10">Ordre de grandeur ?</h2>
+                    <div class="space-y-4">
+                        <button onclick="formEngine.select('budget', '< 2k', 3)" class="w-full text-left p-6 glass-panel rounded-xl hover:bg-white/10 transition-all flex justify-between items-center group">
+                            <span class="text-xl font-bold">Projet Starter (< 2k€)</span>
+                            <i class="fa-solid fa-arrow-right opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </button>
+                        <button onclick="formEngine.select('budget', '2k-10k', 3)" class="w-full text-left p-6 glass-panel rounded-xl hover:bg-white/10 transition-all flex justify-between items-center group border border-primary/20">
+                            <span class="text-xl font-bold text-primary">Business Standard (2k€ - 10k€)</span>
+                            <i class="fa-solid fa-arrow-right opacity-0 group-hover:opacity-100 transition-opacity text-primary"></i>
+                        </button>
+                        <button onclick="formEngine.select('budget', '10k+', 3)" class="w-full text-left p-6 glass-panel rounded-xl hover:bg-white/10 transition-all flex justify-between items-center group">
+                            <span class="text-xl font-bold">Empire Scale (> 10k€)</span>
+                            <i class="fa-solid fa-arrow-right opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                        </button>
+                    </div>
+                    <button onclick="formEngine.back(1)" class="mt-8 text-gray-500 hover:text-white text-sm">← Retour</button>
+                </div>
+
+                <div id="form-step-3" class="form-step hidden">
+                    <h2 class="text-5xl font-display font-bold mb-2">Dernière étape.</h2>
+                    <p class="text-gray-400 mb-10">Où devons-nous envoyer l'estimation PDF ?</p>
+                    <form onsubmit="event.preventDefault(); formEngine.submit();" class="relative">
+                        <input type="email" id="user-email" class="w-full bg-transparent border-b-2 border-white/10 py-4 text-3xl font-bold outline-none focus:border-primary transition-colors placeholder-gray-700" placeholder="votre@email.com" required>
+                        <button type="submit" class="absolute right-0 top-4 text-xl text-primary hover:text-white transition-colors">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </form>
+                    <button onclick="formEngine.back(2)" class="mt-8 text-gray-500 hover:text-white text-sm">← Retour</button>
+                </div>
+
+                <div id="form-success" class="form-step hidden text-center">
+                    <div class="w-32 h-32 rounded-full bg-success/10 flex items-center justify-center text-5xl text-success mx-auto mb-8 animate-bounce">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h2 class="text-4xl font-bold mb-4">Message Transmis.</h2>
+                    <p class="text-gray-400 mb-8">Un PDF d'estimation a été généré. Bastien ou Pierre vous recontactera sous 24h.</p>
+                    <button onclick="router.go('home')" class="px-8 py-3 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform">Retour au QG</button>
+                </div>
+            </div>
+        </main>
+
+        <main id="page-dashboard" class="page-content min-h-screen w-full hidden pt-32 px-6">
+            <div class="max-w-[1400px] mx-auto">
+                <div class="flex justify-between items-center mb-12">
+                    <h1 class="text-4xl font-display font-bold">Espace Client <span class="text-xs bg-primary/20 text-primary px-2 py-1 rounded ml-2">DEMO</span></h1>
+                    <div class="flex items-center gap-4">
+                        <div class="text-right hidden md:block">
+                            <div class="text-sm font-bold">Elon Musk</div>
+                            <div class="text-xs text-gray-500">Tesla Corp.</div>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-gray-800 overflow-hidden border border-white/10">
+                            <img src="https://i.pravatar.cc/150?img=11" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="glass-panel p-8 rounded-3xl lg:col-span-2">
+                        <h3 class="font-bold mb-6 flex items-center gap-2"><i class="fa-solid fa-chart-line text-primary"></i> Performances Live</h3>
+                        <canvas id="clientChart" height="100"></canvas>
+                    </div>
+                    <div class="glass-panel p-8 rounded-3xl bg-gradient-to-br from-primary/10 to-transparent border-primary/30">
+                        <h3 class="font-bold mb-4 text-primary">Projet en cours</h3>
+                        <div class="text-3xl font-bold mb-2">Cybertruck LP</div>
+                        <div class="w-full bg-black/30 h-2 rounded-full mb-4 overflow-hidden">
+                            <div class="h-full bg-primary w-[75%]"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-400 mb-8">
+                            <span>Dev</span>
+                            <span>75%</span>
+                        </div>
+                        <button class="w-full py-3 rounded-xl bg-white text-black font-bold hover:bg-gray-200">Voir la Maquette</button>
+                    </div>
+                    <div class="glass-panel p-8 rounded-3xl">
+                        <h3 class="font-bold mb-6">Fichiers Récents</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-center justify-between p-3 hover:bg-white/5 rounded-lg cursor-pointer">
+                                <div class="flex items-center gap-3"><i class="fa-solid fa-file-pdf text-red-400"></i> <span>Devis_Final_v2.pdf</span></div>
+                                <i class="fa-solid fa-download text-gray-500"></i>
+                            </li>
+                            <li class="flex items-center justify-between p-3 hover:bg-white/5 rounded-lg cursor-pointer">
+                                <div class="flex items-center gap-3"><i class="fa-solid fa-image text-blue-400"></i> <span>Maquette_Home.png</span></div>
+                                <i class="fa-solid fa-download text-gray-500"></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-black py-20 px-6 mt-32 border-t border-white/10 relative z-10">
+            <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between gap-12">
+                <div>
+                    <img src="logo_icon.png" class="w-12 h-auto opacity-50 mb-6">
+                    <p class="text-gray-500 max-w-xs text-sm">CloudyMagine est une entité indépendante. Nous ne suivons pas les tendances, nous les codons.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-12 text-sm">
+                    <div>
+                        <h4 class="font-bold text-white mb-4 uppercase tracking-widest text-xs">Studio</h4>
+                        <ul class="space-y-2 text-gray-500">
+                            <li><a href="#" onclick="router.go('agency')" class="hover:text-primary transition-colors">L'Équipe</a></li>
+                            <li><a href="#" onclick="router.go('portfolio')" class="hover:text-primary transition-colors">Case Studies</a></li>
+                            <li><a href="#" onclick="router.go('contact')" class="hover:text-primary transition-colors">Jobs</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-white mb-4 uppercase tracking-widest text-xs">Legal</h4>
+                        <ul class="space-y-2 text-gray-500">
+                            <li><a href="#" class="hover:text-primary transition-colors">CGV</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">Confidentialité</a></li>
+                            <li><a href="#" class="hover:text-primary transition-colors">Mentions</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="text-right text-gray-600 text-xs">
+                    <p>&copy; 2025 CloudyMagine.</p>
+                    <p>Bordeaux • Volda</p>
+                </div>
+            </div>
+        </footer>
+
+    </div> <div id="modal-overlay" class="fixed inset-0 bg-black/90 z-[200] hidden opacity-0 transition-opacity duration-500 backdrop-blur-xl overflow-y-auto">
+        <button onclick="closeModal()" class="fixed top-8 right-8 z-[210] w-14 h-14 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform">
+            <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+        
+        <div class="min-h-screen w-full relative">
+            <div class="h-[70vh] w-full relative">
+                <img id="modal-img-hero" src="" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-6 md:p-20">
+                    <h1 id="modal-title" class="text-6xl md:text-9xl font-display font-bold mb-4">Project Name</h1>
+                    <p id="modal-cat" class="text-primary font-mono uppercase tracking-widest text-xl">Category</p>
+                </div>
+            </div>
+            
+            <div class="max-w-[1200px] mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-3 gap-16">
+                <div class="md:col-span-2">
+                    <h3 class="text-2xl font-bold mb-6">Le Challenge</h3>
+                    <p id="modal-desc" class="text-gray-400 text-lg leading-relaxed mb-10">Description here.</p>
+                    
+                    <div class="grid grid-cols-1 gap-8">
+                        <img id="modal-img-2" src="" class="w-full h-auto rounded-2xl border border-white/10">
+                        <img id="modal-img-3" src="" class="w-full h-auto rounded-2xl border border-white/10">
+                    </div>
+                </div>
+                <div class="md:col-span-1">
+                    <div class="sticky top-20 p-8 glass-panel rounded-2xl">
+                        <h4 class="font-bold mb-4 uppercase text-xs text-gray-500">Services</h4>
+                        <ul id="modal-services" class="space-y-2 mb-8 text-sm"></ul>
+                        <h4 class="font-bold mb-4 uppercase text-xs text-gray-500">Date</h4>
+                        <p class="text-sm mb-8">2024</p>
+                        <button class="w-full py-3 border border-white/20 rounded-lg hover:bg-white hover:text-black transition-colors font-bold">Voir en ligne ↗</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed bottom-8 right-8 z-[100] group">
+        <div id="bot-msg" class="absolute bottom-16 right-0 w-64 p-4 glass-panel rounded-2xl rounded-br-none mb-2 opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
+            <p class="text-xs text-gray-300">Besoin d'une estimation rapide ? Je peux générer un PDF en 2 minutes.</p>
+            <button onclick="router.go('start')" class="mt-2 text-primary text-xs font-bold underline">Lancer l'IA</button>
+        </div>
+        <button class="w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary text-white shadow-[0_0_20px_rgba(206,143,255,0.5)] flex items-center justify-center text-xl hover:scale-110 transition-transform">
+            <i class="fa-regular fa-comments"></i>
+        </button>
+    </div>
+
+    <script>
+        /* --- 1. PARTICLE SYSTEM (PHYSICS) --- */
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        const mouse = { x: -1000, y: -1000 };
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            // Créer 100 particules
+            for(let i=0; i<100; i++) {
+                particles.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 2,
+                    alpha: Math.random() * 0.5 + 0.1
+                });
+            }
+        }
+
+        function animateCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                // Mouvement de base
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Rebond bords
+                if(p.x < 0 || p.x > width) p.vx *= -1;
+                if(p.y < 0 || p.y > height) p.vy *= -1;
+
+                // Réaction souris (Repulsion)
+                const dx = mouse.x - p.x;
+                const dy = mouse.y - p.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if(dist < 150) {
+                    const angle = Math.atan2(dy, dx);
+                    const force = (150 - dist) / 150;
+                    p.x -= Math.cos(angle) * force * 2;
+                    p.y -= Math.sin(angle) * force * 2;
+                }
+
+                // Dessin
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(206, 143, 255, ${p.alpha})`;
+                ctx.fill();
+
+                // Lignes de connexion
+                particles.forEach(p2 => {
+                    const d = Math.sqrt((p.x - p2.x)**2 + (p.y - p2.y)**2);
+                    if(d < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = `rgba(206, 143, 255, ${0.1 - (d/100)*0.1})`;
+                        ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(animateCanvas);
+        }
+
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('resize', initCanvas);
+        initCanvas();
+        animateCanvas();
+
+        /* --- 2. CUSTOM CURSOR & MAGNETIC --- */
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        
+        window.addEventListener('mousemove', e => {
+            cursorDot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+            // Léger délai pour le grand cercle (effet fluide)
+            setTimeout(() => {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }, 50);
+        });
+
+        document.querySelectorAll('[data-magnet="true"]').forEach(el => {
+            el.addEventListener('mouseenter', () => document.body.classList.add('magnet-active'));
+            el.addEventListener('mouseleave', () => document.body.classList.remove('magnet-active'));
+            // Effet magnétique simple (déplace l'élément vers la souris)
+            el.addEventListener('mousemove', e => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width/2;
+                const y = e.clientY - rect.top - rect.height/2;
+                el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+            });
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = 'translate(0,0)';
+            });
+        });
+
+        /* --- 3. AUDIO ENGINE (Web Audio API) --- */
+        const audioEngine = {
+            ctx: null,
+            muted: true,
+            init() {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            },
+            playTone(freq = 400, type = 'sine', duration = 0.1) {
+                if(this.muted || !this.ctx) return;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start();
+                osc.stop(this.ctx.currentTime + duration);
+            },
+            toggle() {
+                if(!this.ctx) this.init();
+                this.muted = !this.muted;
+                const btn = document.getElementById('audio-toggle');
+                if(!this.muted) {
+                    btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
+                    btn.classList.add('text-primary', 'border-primary');
+                    this.playTone(600, 'sine', 0.3); // Son d'activation
+                } else {
+                    btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+                    btn.classList.remove('text-primary', 'border-primary');
+                }
+            }
+        };
+
+        // Sons sur les boutons
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mouseenter', () => audioEngine.playTone(300, 'triangle', 0.05));
+            btn.addEventListener('click', () => audioEngine.playTone(600, 'sine', 0.1));
+        });
+
+        /* --- 4. ROUTER & TRANSITIONS --- */
+        const router = {
+            current: 'home',
+            go(pageId) {
+                if(this.current === pageId) return;
+                
+                // 1. Play Sound
+                audioEngine.playTone(200, 'square', 0.2);
+
+                // 2. Transition Out
+                const currentEl = document.getElementById('page-' + this.current);
+                if(currentEl) {
+                    currentEl.classList.remove('visible');
+                    setTimeout(() => currentEl.classList.add('hidden'), 800);
+                }
+
+                // 3. Transition In
+                setTimeout(() => {
+                    const nextEl = document.getElementById('page-' + pageId);
+                    if(nextEl) {
+                        nextEl.classList.remove('hidden');
+                        // Force reflow
+                        void nextEl.offsetWidth;
+                        nextEl.classList.add('visible');
+                        window.scrollTo(0, 0);
+                    }
+                    this.current = pageId;
+                    
+                    // Special init for Dashboard chart
+                    if(pageId === 'dashboard') initChart();
+                }, 800);
+            }
+        };
+
+        /* --- 5. FORM ENGINE --- */
+        const formEngine = {
+            data: {},
+            select(key, value, nextStepId) {
+                this.data[key] = value;
+                this.transition(nextStepId);
+            },
+            back(prevStepId) {
+                this.transition(prevStepId);
+            },
+            transition(stepId) {
+                document.querySelectorAll('.form-step').forEach(el => el.classList.add('hidden'));
+                document.getElementById('form-step-' + stepId).classList.remove('hidden');
+                
+                // Update Progress Bar
+                const bar = document.getElementById('progress-bar');
+                if(stepId === 1) bar.style.width = '33%';
+                if(stepId === 2) bar.style.width = '66%';
+                if(stepId === 3) bar.style.width = '100%';
+            },
+            submit() {
+                const email = document.getElementById('user-email').value;
+                this.data.email = email;
+                
+                // Fake Generation PDF Logic
+                document.getElementById('form-step-3').classList.add('hidden');
+                document.getElementById('form-success').classList.remove('hidden');
+                
+                // Generate Real PDF
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                doc.setFillColor(3,3,4); doc.rect(0,0,210,297,'F'); // Fond noir
+                doc.setTextColor(255,255,255);
+                doc.setFontSize(22); doc.text("CloudyMagine // Estimation", 20, 20);
+                doc.setFontSize(12); doc.text(`Projet : ${this.data.type}`, 20, 40);
+                doc.text(`Budget : ${this.data.budget}`, 20, 50);
+                doc.text(`Client : ${this.data.email}`, 20, 60);
+                doc.save('CloudyMagine_Brief.pdf');
+            }
+        };
+
+        /* --- 6. PROJECTS DATA & MODAL --- */
+        const projects = [
+            { title: "BMJ Prod", cat: "YouTube", desc: "Refonte de chaîne YouTube. Nous avons créé un système graphique qui permet de produire des miniatures à fort CTR en moins de 10 minutes.", imgs: ["images/BMJ/1.jpg", "images/BMJ/2.jpg", "images/BMJ/3.jpg"], services: ["Design", "Consulting"] },
+            { title: "Suko Drinks", cat: "Branding", desc: "Lancement d'une boisson. Création de l'univers 3D, packaging et site e-commerce Shopify Headless.", imgs: ["images/SUKO/1.jpg", "images/SUKO/2.jpg", "images/SUKO/3.jpg"], services: ["3D", "Web", "Ads"] },
+            { title: "CloudyMagine", cat: "Web", desc: "Notre propre plateforme. Une expérience immersive sans framework lourd, codée en Vanilla JS pour une performance maximale.", imgs: ["images/CM/1.jpg", "images/CM/2.jpg", "images/CM/3.jpg"], services: ["Dev", "UX"] },
+            { title: "TLPB", cat: "Merch", desc: "Collection Capsule. Design textile et shooting photo pour la tournée européenne.", imgs: ["images/TLPB/1.jpg", "images/TLPB/2.jpg", "images/TLPB/3.jpg"], services: ["Art Direction", "Photo"] }
+        ];
+
+        function openModal(idx) {
+            const p = projects[idx];
+            document.getElementById('modal-title').innerText = p.title;
+            document.getElementById('modal-cat').innerText = p.cat;
+            document.getElementById('modal-desc').innerText = p.desc;
+            document.getElementById('modal-img-hero').src = p.imgs[0];
+            document.getElementById('modal-img-2').src = p.imgs[1] || p.imgs[0];
+            document.getElementById('modal-img-3').src = p.imgs[2] || p.imgs[0];
+            
+            const ul = document.getElementById('modal-services');
+            ul.innerHTML = '';
+            p.services.forEach(s => ul.innerHTML += `<li class='flex items-center gap-2'><span class='w-1 h-1 bg-primary rounded-full'></span>${s}</li>`);
+
+            const m = document.getElementById('modal-overlay');
+            m.classList.remove('hidden');
+            setTimeout(() => m.classList.remove('opacity-0'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const m = document.getElementById('modal-overlay');
+            m.classList.add('opacity-0');
+            setTimeout(() => {
+                m.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }, 500);
+        }
+
+        /* --- 7. INIT CHART (DASHBOARD) --- */
+        let chartInstance = null;
+        function initChart() {
+            if(chartInstance) return; // Déjà init
+            const ctx = document.getElementById('clientChart').getContext('2d');
+            // Gradient fill
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(206, 143, 255, 0.5)');
+            gradient.addColorStop(1, 'rgba(206, 143, 255, 0)');
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+                    datasets: [{
+                        label: 'Visites',
+                        data: [120, 190, 300, 500, 200, 300, 450],
+                        borderColor: '#CE8FFF',
+                        backgroundColor: gradient,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { x: { display: false }, y: { display: false } }
+                }
+            });
+        }
+
+        /* --- 8. BOOTSTRAP --- */
+        window.onload = function() {
+            // Fake Loading Sequence
+            const bar = document.getElementById('loader-bar');
+            const status = document.getElementById('loader-status');
+            
+            setTimeout(() => { bar.style.width = "40%"; status.innerText = "Chargement des Assets 3D..."; }, 500);
+            setTimeout(() => { bar.style.width = "80%"; status.innerText = "Connexion au Serveur Neural..."; }, 1200);
+            setTimeout(() => { 
+                bar.style.width = "100%"; 
+                document.getElementById('loader').style.transform = "translateY(-100%)";
+                document.getElementById('page-home').classList.add('visible');
+                
+                // Init animations texte
+                startTextScramble();
+            }, 2000);
+        };
+
+        // Text Scramble Effect (Matrix style)
+        function startTextScramble() {
+            const els = document.querySelectorAll('.reveal-text');
+            els.forEach(el => {
+                // Simple reveal logic for now to keep code lighter
+                el.style.opacity = 0;
+                el.style.transform = "translateY(20px)";
+                setTimeout(() => {
+                    el.style.transition = "all 1s cubic-bezier(0.2, 1, 0.3, 1)";
+                    el.style.opacity = 1;
+                    el.style.transform = "translateY(0)";
+                }, el.dataset.delay * 1000);
+            });
+        }
+
+    </script>
+</body>
+</html>
