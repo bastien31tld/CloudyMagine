@@ -2,20 +2,19 @@
 <html lang="fr" class="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CloudyMagine | Architects of the Invisible</title>
-    <meta name="description" content="Agence digitale haute performance. Nous construisons des écosystèmes numériques neuro-optimisés pour les marques d'élite.">
-    <meta name="theme-color" content="#030304">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CloudyMagine | Agence de communication digitale haute performance. Architecture de marques, Stratégie d'acquisition, Design systémique.">
+    <meta name="author" content="Bastien & Pierre">
+    <title>CloudyMagine | L'Art de l'Invisible</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script> <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;800&family=Outfit:wght@100;300;500;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;800&family=Outfit:wght@300;500;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -28,27 +27,22 @@
                         mono: ['Space Grotesk', 'monospace'],
                     },
                     colors: {
-                        primary: '#CE8FFF',      
-                        secondary: '#E490FF',    
+                        primary: '#CE8FFF',
+                        secondary: '#E490FF',
                         accent: '#00F0FF',
-                        dark: '#030304',         
-                        surface: '#0A0A0C',      
-                        glass: 'rgba(255, 255, 255, 0.03)',
-                        'glass-high': 'rgba(255, 255, 255, 0.08)',
-                    },
-                    backgroundImage: {
-                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-                        'hero-glow': 'conic-gradient(from 180deg at 50% 50%, #CE8FFF22 0deg, #E490FF22 180deg, #CE8FFF22 360deg)',
+                        success: '#00FF94',
+                        warning: '#FFB020',
+                        dark: '#030304',
+                        surface: '#0A0A0C',
+                        'surface-highlight': '#141419',
                     },
                     animation: {
-                        'float': 'float 8s ease-in-out infinite',
-                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'spin-slow': 'spin 12s linear infinite',
+                        'marquee': 'marquee 30s linear infinite',
                     },
                     keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-20px)' },
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
                         }
                     }
                 }
@@ -57,915 +51,1253 @@
     </script>
 
     <style>
-        /* --- RESET & VARIABLES --- */
+        /* --- VARIABLES --- */
         :root {
-            --cursor-size: 20px;
-            --primary-rgb: 206, 143, 255;
-            --easing: cubic-bezier(0.19, 1, 0.22, 1);
+            --primary-rgb: 122, 59, 224;
+            --bg-dark: #030304;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+            --transition-curve: cubic-bezier(0.65, 0, 0.35, 1);
         }
 
-        * { box-sizing: border-box; cursor: none; }
-        
         body {
-            background-color: #030304;
-            color: #e2e2e2;
+            /* Arrière-plan de base pour tout le site (propre) */
+            background: radial-gradient(circle at center, #1a1a2e 0%, #030304 100%);
+            color: #ffffff;
             overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
+            cursor: default;
+            min-height: 100vh;
         }
 
-        /* Scrollbar invisible mais fonctionnelle (gérée par JS Smooth Scroll) */
-        ::-webkit-scrollbar { width: 0px; background: transparent; }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-dark); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; border: 2px solid var(--bg-dark); }
+        ::-webkit-scrollbar-thumb:hover { background: #7A3BE0; }
 
-        /* --- BACKGROUND LAYERS --- */
-        .layer-noise {
-            position: fixed; inset: 0; width: 100%; height: 100%; z-index: 90; pointer-events: none;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
-            opacity: 0.08; mix-blend-mode: overlay;
-        }
+/* --- NOISE & AMBIENT LIGHT (STYLE APPLE) --- */
+.noise-layer {
+    position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 90;
+    opacity: 0.09; /* Grain plus visible */
+    mix-blend-mode: overlay; animation: noise-shift 0.2s infinite;
+}
+@keyframes noise-shift { 0% { transform: translate(0, 0); } 100% { transform: translate(5%, 5%); } }
 
-        .layer-vignette {
-            position: fixed; inset: 0; z-index: 80; pointer-events: none;
-            background: radial-gradient(circle at center, transparent 0%, #030304 120%);
-        }
+/* Nouvelle couche de lumière d'ambiance animée */
+.ambient-light {
+    position: fixed; top: 50%; left: 50%; width: 150vw; height: 150vh;
+    transform: translate(-50%, -50%); pointer-events: none; z-index: -1;
+    background: radial-gradient(circle at 50% 50%, rgba(122, 59, 224, 0.12), transparent 60%);
+    mix-blend-mode: screen;
+    animation: light-shift 30s infinite alternate ease-in-out;
+}
+@keyframes light-shift {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    100% { transform: translate(-40%, -60%) scale(1.2) rotate(5deg); }
+}
 
-        .layer-canvas {
-            position: fixed; inset: 0; z-index: 0; pointer-events: none;
-        }
+/* Animation pour l'image de la Home uniquement */
+@keyframes cosmic-breath-slow {
+    0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); }
+}
+.hero-bg-image {
+    animation: cosmic-breath-slow 25s infinite alternate ease-in-out;
+}
 
-        /* --- TYPOGRAPHY & UTILS --- */
-        .text-gradient {
-            background: linear-gradient(to right, #fff 20%, #CE8FFF 50%, #E490FF 80%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            background-size: 200% auto; animation: shine 5s linear infinite;
-        }
-        @keyframes shine { to { background-position: 200% center; } }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-        }
+/* --- PARTICULES (CANVAS) --- */
+#canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; mix-blend-mode: screen; }
 
-        /* --- CUSTOM CURSOR --- */
-        #cursor {
-            position: fixed; top: 0; left: 0; width: var(--cursor-size); height: var(--cursor-size);
-            border: 1px solid rgba(255, 255, 255, 0.8); border-radius: 50%; pointer-events: none; z-index: 9999;
-            transform: translate(-50%, -50%); transition: width 0.3s var(--easing), height 0.3s var(--easing), background-color 0.3s;
-            mix-blend-mode: difference;
-        }
-        #cursor-dot {
-            position: fixed; top: 0; left: 0; width: 4px; height: 4px; background: white;
-            border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
-        }
-        .magnet-active #cursor { width: 60px; height: 60px; background: rgba(255,255,255,0.1); border-color: transparent; backdrop-filter: blur(2px); }
+/* --- 3D TILT EFFECT --- */
+.tilt-card { transform-style: preserve-3d; transform: perspective(1000px); }
+.tilt-inner { transform: translateZ(20px); }
+.glare {
+    position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.3), transparent 60%);
+    opacity: 0; pointer-events: none; mix-blend-mode: overlay; transition: opacity 0.2s;
+    border-radius: inherit; z-index: 50;
+}
 
-        /* --- PAGE TRANSITIONS --- */
-        #loader {
-            position: fixed; inset: 0; background: #030304; z-index: 10000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            transition: transform 1s cubic-bezier(0.87, 0, 0.13, 1);
+        /* --- TRANSITION & LOADER (ORIGINAL + LIQUID EFFECT) --- */
+        #page-transition-curtain {
+            position: fixed; inset: 0; z-index: 9999;
+            background: #030304;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            transform: translateY(0);
+            transition: transform 1s var(--transition-curve), background 0.5s ease;
         }
-        .loader-bar { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin-top: 20px; position: relative; overflow: hidden; }
-        .loader-progress { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: #CE8FFF; transition: width 0.2s; }
+        #page-transition-curtain.hidden-curtain { transform: translateY(-100%); pointer-events: none; }
+        #page-transition-curtain.nav-mode { background: rgba(5, 5, 8, 0.85); backdrop-filter: blur(40px); }
+        #page-transition-curtain.active { transform: translateY(0); pointer-events: auto; }
+
+        /* Loader Liquide */
+        #initial-loader-content { position: relative; width: 150px; height: 150px; display: block; }
+        .logo-ghost {
+            position: absolute; inset: 0; background-color: rgba(255, 255, 255, 0.1);
+            -webkit-mask-image: url('logo_icon.png'); mask-image: url('logo_icon.png');
+            -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; z-index: 1;
+        }
+        .logo-liquid {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 0%;
+            background: linear-gradient(to top, #7A3BE0, #E490FF);
+            -webkit-mask-image: url('logo_icon.png'); mask-image: url('logo_icon.png');
+            -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center;
+            transition: height 0.1s linear; filter: drop-shadow(0 0 15px rgba(122, 59, 224, 0.6)); z-index: 2;
+        }
+        .logo-liquid::before {
+            content: ''; position: absolute; width: 200%; height: 20px; background: rgba(255, 255, 255, 0.8); opacity: 0.5;
+            top: -10px; left: -50%; border-radius: 40%; animation: wave 2s linear infinite;
+        }
+        @keyframes wave { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        .loading-text { margin-top: 20px; font-family: 'Space Grotesk', monospace; font-size: 12px; letter-spacing: 4px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; }
+        .droplet { position: absolute; background: #E490FF; border-radius: 50%; pointer-events: none; opacity: 0; z-index: 10; box-shadow: 0 0 10px var(--primary-rgb); }
+        @keyframes dropSplash { 0% { transform: scale(0) translateY(0); opacity: 1; } 50% { opacity: 1; } 100% { transform: scale(1.5) translateY(40px); opacity: 0; } }
+
+        /* Transition Logo Standard (restored original behavior) */
+        #transition-logo-img {
+            width: 200px; height: auto; opacity: 0; display: none;
+            transform: scale(0.8) rotate(-10deg) translateY(50px);
+            transition: all 1s var(--transition-curve) 0.2s; 
+            filter: drop-shadow(0 0 0px rgba(122, 59, 224, 0)); position: relative; z-index: 20;
+        }
+        #page-transition-curtain.active #transition-logo-img { opacity: 1; transform: scale(1.5) rotate(0deg) translateY(0); filter: drop-shadow(0 0 60px rgba(122, 59, 224, 0.8)); }
+
+        /* Page Routing */
+        .page-section {
+            display: none; opacity: 0; transform: scale(0.98) translateY(20px); filter: blur(10px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out, filter 0.8s ease-out;
+        }
+        .page-section.active { display: block; opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        .page-section.fading-out { opacity: 0; transform: scale(1.02); filter: blur(5px); }
+
+        /* UI */
+        .glass-panel { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: var(--glass-border); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+        .text-liquid { background: linear-gradient(90deg, #fff, #7A3BE0, #E490FF, #fff); background-size: 300% 100%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientX 6s linear infinite; }
+        @keyframes gradientX { 0% { background-position: 0% 50%; } 100% { background-position: 100% 50%; } }
+        .neon-glow { filter: drop-shadow(0 0 5px rgba(122, 59, 224, 0.5)); }
         
-        .page-content { opacity: 0; transform: translateY(50px); transition: opacity 1s ease, transform 1s var(--easing); }
-        .page-content.visible { opacity: 1; transform: translateY(0); }
+        /* Dashboard Sidebar Styles */
+        .dash-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-white/5 transition-all cursor-pointer; }
+        .dash-link.active { @apply bg-primary/10 text-primary border border-primary/20; }
 
-        /* --- COMPONENTS --- */
-        /* Magnetic Button */
-        .btn-magnetic { position: relative; display: inline-flex; overflow: hidden; transition: transform 0.3s; }
-        .btn-magnetic:hover .btn-fill { transform: translateY(0); }
-        .btn-fill { position: absolute; inset: 0; background: white; transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.7, 0, 0.3, 1); z-index: -1; }
+        /* DEVIS ORIGINAL STYLES RESTORED */
+        .srv-card {
+            transition: all 0.4s var(--transition-curve);
+        }
+        .srv-card.selected-primary { border-color: #7A3BE0; background: rgba(255, 255, 255, 0.05); }
+        .srv-card.selected-secondary { border-color: #E490FF; background: rgba(255, 255, 255, 0.05); }
+        .srv-card.selected-accent { border-color: #00F0FF; background: rgba(255, 255, 255, 0.05); }
+		
+/* --- CURSEUR PERSONNALISÉ (PREMIUM) --- */
         
-        /* Marquee */
-        .marquee-wrap { overflow: hidden; white-space: nowrap; position: relative; }
-        .marquee-inner { display: inline-block; animation: marquee 30s linear infinite; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        /* 1. On cache le curseur par défaut partout */
+        body, a, button, input, textarea, .cursor-pointer {
+            cursor: none !important;
+        }
 
-        /* Scramble Text */
-        .scramble-hover:hover { color: #CE8FFF; }
+        /* 2. Le style du nouveau curseur */
+        #custom-cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 20px;
+            height: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            pointer-events: none; /* INDISPENSABLE : Laisse passer les clics au travers */
+            z-index: 10000; /* Au-dessus de tout, même du menu */
+            transform: translate(-50%, -50%);
+            transition: transform 0.15s ease-out, background 0.2s, width 0.2s, height 0.2s; /* C'est ici qu'est l'effet "Laggy/Fluide" */
+            mix-blend-mode: difference; /* Inverse les couleurs sur fond blanc (très pro) */
+        }
 
-        /* Card Hover 3D */
-        .card-3d { transform-style: preserve-3d; perspective: 1000px; }
-        .card-content { transition: transform 0.1s; transform-style: preserve-3d; }
+        /* 3. L'état quand on survole un lien ou un bouton */
+        #custom-cursor.hovered {
+            width: 30px; /* Il grossit */
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1); /* Il se remplit légèrement */
+            border-color: transparent;
+            backdrop-filter: blur(2px);
+        }
+
+        /* 4. On désactive sur mobile (car pas de souris) */
+        @media (max-width: 768px) {
+            #custom-cursor { display: none; }
+            body, a, button { cursor: auto !important; }
+        }
+
     </style>
 </head>
-<body class="font-sans">
 
-    <div class="layer-noise"></div>
-    <div class="layer-vignette"></div>
-    <canvas id="particle-canvas" class="layer-canvas"></canvas>
+<body class="antialiased text-gray-200 selection:bg-primary selection:text-white">
+
+    <div class="ambient-light"></div>
+
+    <div class="noise-layer"></div>
+
+    <div id="canvas-container"></div>
+
+	<div id="custom-cursor"></div>
     
-    <div id="cursor"></div>
-    <div id="cursor-dot"></div>
+    <div id="page-transition-curtain">
+        <div id="initial-loader-content">
+            <div class="logo-ghost"></div>
+            <div class="logo-liquid" id="loader-liquid"></div>
+        </div>
+        <div class="loading-text" id="loader-text">Initialisation... 0%</div>
+        <div id="droplets-container" class="absolute inset-0 pointer-events-none"></div>
+        <img src="logo_icon.png" id="transition-logo-img" alt="Chargement">
+    </div>
+	
+	<div id="mobile-menu-overlay" class="fixed inset-0 z-40 bg-dark/95 backdrop-blur-xl flex flex-col justify-center items-center opacity-0 pointer-events-none transition-all duration-500 transform scale-95">
+        <button onclick="toggleMobileMenu()" class="absolute top-8 right-8 text-gray-500 hover:text-white text-2xl">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
 
-    <div id="loader">
-        <img src="logo_icon.png" class="w-16 h-auto mb-4 animate-pulse" alt="CM Logo">
-        <div class="font-mono text-[10px] tracking-[0.3em] text-gray-500 uppercase" id="loader-status">Initialisation du système</div>
-        <div class="loader-bar"><div class="loader-progress" id="loader-bar"></div></div>
+        <nav class="flex flex-col gap-8 text-center">
+            <a href="#" onclick="routeTo('home'); toggleMobileMenu()" class="text-4xl font-display font-bold text-white hover:text-primary transition-colors">Studio</a>
+            <a href="#" onclick="routeTo('about'); toggleMobileMenu()" class="text-4xl font-display font-bold text-white hover:text-secondary transition-colors">L'Agence</a>
+            <a href="#" onclick="routeTo('portfolio'); toggleMobileMenu()" class="text-4xl font-display font-bold text-white hover:text-accent transition-colors">Projets</a>
+            <a href="#" onclick="routeTo('devis'); toggleMobileMenu()" class="text-4xl font-display font-bold text-white hover:text-white transition-colors">Estimation</a>
+            <a href="#" onclick="routeTo('contact'); toggleMobileMenu()" class="text-4xl font-display font-bold text-white hover:text-success transition-colors">Contact</a>
+        </nav>
+
+        <div class="absolute bottom-10 text-gray-500 text-sm font-mono">
+            CloudyMagine &copy; 2025
+        </div>
     </div>
 
-    <nav class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 glass-panel px-2 py-2 rounded-full flex items-center gap-2 transition-all duration-500 hover:px-6 hover:gap-4">
-        <button onclick="router.go('home')" class="nav-item w-12 h-12 rounded-full flex flex-col items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group relative" data-magnet="true">
-            <i class="fa-solid fa-house text-lg mb-1 group-hover:-translate-y-1 transition-transform"></i>
-            <span class="text-[8px] uppercase font-bold absolute bottom-1 opacity-0 group-hover:opacity-100 transition-opacity">Studio</span>
-        </button>
-        <button onclick="router.go('agency')" class="nav-item w-12 h-12 rounded-full flex flex-col items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group relative" data-magnet="true">
-            <i class="fa-solid fa-users text-lg mb-1 group-hover:-translate-y-1 transition-transform"></i>
-            <span class="text-[8px] uppercase font-bold absolute bottom-1 opacity-0 group-hover:opacity-100 transition-opacity">Agence</span>
-        </button>
-        <div class="w-16 h-16 -mt-8 bg-white rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.3)] cursor-pointer hover:scale-110 transition-transform" onclick="router.go('start')" data-magnet="true">
-            <img src="logo_icon.png" class="w-8 h-8 brightness-0">
+    <header class="fixed w-full top-0 z-50 border-b border-white/5 bg-dark/80 backdrop-blur-xl h-24 transition-all duration-500" id="navbar">
+        <div class="max-w-[1800px] mx-auto px-8 h-full flex justify-between items-center">
+            <a href="#" onclick="routeTo('home')" class="group relative pl-2">
+                <div class="absolute inset-0 bg-primary/30 blur-2xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 w-20 h-20 -left-4 -top-4"></div>
+                <img src="logo_icon.png" alt="CloudyMagine" class="h-16 w-auto relative z-10 neon-glow transition-transform duration-700 group-hover:rotate-[360deg] group-hover:scale-110">
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-1 p-1.5 bg-surface/50 rounded-full border border-white/10 backdrop-blur-md shadow-2xl">
+                <button onclick="routeTo('home')" class="nav-btn px-6 py-3 rounded-full text-sm font-medium text-gray-400 hover:text-white hover:bg-white/10 transition-all">Studio</button>
+                <button onclick="routeTo('about')" class="nav-btn px-6 py-3 rounded-full text-sm font-medium text-gray-400 hover:text-white hover:bg-white/10 transition-all">L'Agence</button>
+                <button onclick="routeTo('portfolio')" class="nav-btn px-6 py-3 rounded-full text-sm font-medium text-gray-400 hover:text-white hover:bg-white/10 transition-all">Projets</button>
+                <button onclick="routeTo('devis')" class="nav-btn px-6 py-3 rounded-full text-sm font-medium text-gray-400 hover:text-white hover:bg-white/10 transition-all">Estimation</button>
+				<button id="audio-btn" onclick="toggleAudio()" class="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-primary hover:border-primary transition-all relative overflow-hidden group">
+    <div class="absolute inset-0 bg-primary/20 scale-0 group-hover:scale-100 transition-transform rounded-full"></div>
+    <i id="audio-icon" class="fa-solid fa-volume-xmark relative z-10"></i>
+    <div id="audio-viz" class="absolute bottom-0 left-0 w-full h-full flex items-end justify-center gap-[2px] opacity-0 transition-opacity pb-2">
+        <div class="w-[2px] h-2 bg-primary animate-bounce"></div>
+        <div class="w-[2px] h-4 bg-primary animate-bounce" style="animation-delay: 0.1s"></div>
+        <div class="w-[2px] h-3 bg-primary animate-bounce" style="animation-delay: 0.2s"></div>
+    </div>
+</button>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-6">
+                <button onclick="routeTo('contact')" class="text-sm font-medium text-gray-400 hover:text-white transition-colors">Contact</button>
+                </button>
+                <button onclick="routeTo('devis')" class="px-8 py-3 rounded-full bg-white text-black font-bold hover:bg-gray-200 transition hover:scale-105 duration-300">
+                    Démarrer
+                </button>
+            </div>
+            <button class="lg:hidden text-2xl text-white" onclick="toggleMobileMenu()"><i class="fa-solid fa-bars-staggered"></i></button>
         </div>
-        <button onclick="router.go('portfolio')" class="nav-item w-12 h-12 rounded-full flex flex-col items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group relative" data-magnet="true">
-            <i class="fa-solid fa-layer-group text-lg mb-1 group-hover:-translate-y-1 transition-transform"></i>
-            <span class="text-[8px] uppercase font-bold absolute bottom-1 opacity-0 group-hover:opacity-100 transition-opacity">Projets</span>
-        </button>
-        <button onclick="router.go('dashboard')" class="nav-item w-12 h-12 rounded-full flex flex-col items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all group relative" data-magnet="true">
-            <i class="fa-solid fa-lock text-lg mb-1 group-hover:-translate-y-1 transition-transform"></i>
-            <span class="text-[8px] uppercase font-bold absolute bottom-1 opacity-0 group-hover:opacity-100 transition-opacity">Client</span>
-        </button>
-    </nav>
+    </header>
 
-    <button id="audio-toggle" class="fixed top-8 right-8 z-50 w-10 h-10 glass-panel rounded-full flex items-center justify-center text-gray-400 hover:text-primary transition-colors" onclick="audioEngine.toggle()">
-        <i class="fa-solid fa-volume-xmark"></i>
-    </button>
+    <div id="login-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="glass-panel p-10 rounded-3xl w-full max-w-md relative transform scale-95 transition-transform duration-300" id="login-panel">
+            <button onclick="toggleLoginModal()" class="absolute top-5 right-5 text-gray-500 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4 text-primary text-2xl"><i class="fa-solid fa-lock"></i></div>
+                <h3 class="text-2xl font-bold">Espace Privé</h3>
+                <p class="text-gray-400 text-sm">Accédez à vos projets en cours.</p>
+            </div>
+            <form onsubmit="event.preventDefault(); loginClient();" class="space-y-4">
+                <input type="email" value="demo@client.com" class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none">
+                <input type="password" value="password" class="w-full bg-black/50 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none">
+                <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary py-4 rounded-xl font-bold text-white hover:shadow-lg hover:shadow-primary/30 transition-all">Se Connecter</button>
+            </form>
+        </div>
+    </div>
 
-    <div id="scroll-container" class="w-full absolute top-0 left-0">
+	<main id="page-home" class="page-section active">
         
-        <main id="page-home" class="page-content min-h-screen w-full relative">
+        <section class="relative min-h-screen flex flex-col justify-center items-center px-6 overflow-hidden">
             
-            <section class="h-screen flex items-center justify-center relative overflow-hidden">
-                <div class="absolute inset-0 z-[-1] animate-pulse-slow opacity-40">
-                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] bg-primary/10 rounded-full blur-[150px]"></div>
+            <div class="absolute inset-0 z-0 pointer-events-none hero-bg-image" style="background-image: url('image_2.png'); background-size: cover; background-position: center;"></div>
+
+            <div class="absolute inset-0 bg-black/50 z-0 pointer-events-none"></div>
+
+            <div class="relative z-10 text-center max-w-7xl mx-auto mt-20">
+                <div data-aos="fade-down" class="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md mb-10 hover:border-primary/50 transition-colors cursor-default shadow-xl">
+                    <span class="relative flex h-3 w-3">
+                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                      <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
+                    </span>
+                    <span class="text-xs font-mono uppercase tracking-widest text-gray-300">Pierre et Bastien vous souhaite la bienvenue</span>
                 </div>
-                <div class="absolute inset-0 z-[-2] opacity-60 mix-blend-screen animate-float">
-                    <img src="image_2.png" class="w-full h-full object-cover scale-110" alt="Cosmos">
+
+                <h1 class="text-7xl md:text-[9rem] font-display font-bold leading-[0.85] tracking-tighter mb-10 drop-shadow-2xl">
+                    Faites que vos idées <br>
+                    <span class="text-liquid pb-4 block">Brillent plus fort.</span>
+                </h1>
+
+                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-14 leading-relaxed font-light" data-aos="fade-up" data-aos-delay="100">
+                    CloudyMagine n'est pas une agence. C'est un accélérateur de réalité pour marques ambitieuses. Nous transformons l'abstrait en empires digitaux.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-6 justify-center" data-aos="fade-up" data-aos-delay="200">
+                    <button onclick="routeTo('devis')" class="group relative px-10 py-5 rounded-full bg-white text-black font-bold text-lg overflow-hidden shadow-2xl hover:scale-105 transition-transform duration-300">
+                        <span class="relative z-10 group-hover:text-primary transition-colors">Lancer un Projet</span>
+                        <div class="absolute inset-0 bg-gray-100 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300 ease-out"></div>
+                    </button>
+                    <button onclick="routeTo('portfolio')" class="px-10 py-5 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/30 transition text-lg backdrop-blur-md">
+                        Explorer les Œuvres
+                    </button>
                 </div>
+            </div>
 
-                <div class="text-center z-10 px-6">
-                    <div class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full border border-white/10 bg-black/40 backdrop-blur-xl mb-12 hover:border-primary/50 transition-colors">
-                        <span class="relative flex h-2 w-2">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
-                        </span>
-                        <span class="text-[10px] font-mono uppercase tracking-[0.2em] text-gray-300">Disponible pour Q4 2025</span>
-                    </div>
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 animate-bounce">
+                <span class="text-[10px] font-mono uppercase tracking-[0.3em]">Scroll Down</span>
+                <i class="fa-solid fa-chevron-down text-primary"></i>
+            </div>
+        </section>
 
-                    <h1 class="text-7xl md:text-[10rem] font-display font-bold leading-[0.85] tracking-tighter mb-8 mix-blend-exclusion">
-                        <span class="block reveal-text" data-delay="0.1">Digital</span>
-                        <span class="block reveal-text text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-400 to-gray-600" data-delay="0.2">Alchemy.</span>
-                    </h1>
-
-                    <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed mb-16 reveal-text" data-delay="0.4">
-                        Nous ne construisons pas des sites web. Nous architecturons des avantages concurrentiels déloyaux en fusionnant design cognitif et ingénierie brute.
-                    </p>
-
-                    <div class="flex flex-col sm:flex-row justify-center gap-6 reveal-text" data-delay="0.6">
-                        <button onclick="router.go('start')" class="btn-magnetic px-10 py-4 rounded-full bg-white text-black font-bold text-sm uppercase tracking-widest hover:bg-gray-200 transition-colors" data-magnet="true">
-                            Lancer le projet
-                        </button>
-                        <button onclick="router.go('portfolio')" class="btn-magnetic px-10 py-4 rounded-full border border-white/20 text-white font-bold text-sm uppercase tracking-widest hover:bg-white/5 transition-colors" data-magnet="true">
-                            Voir les preuves
-                        </button>
-                    </div>
+        <section class="py-40 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
+            <div class="max-w-5xl mx-auto px-6 relative z-10 text-center">
+                <i class="fa-solid fa-quote-left text-6xl text-white/5 mb-8 block"></i>
+                <h2 class="text-4xl md:text-6xl font-display font-medium leading-snug" data-aos="zoom-in" data-aos-duration="1500">
+                    "Dans un monde saturé de bruit, <span class="text-white bg-primary/20 px-2 italic">le silence du design parfait</span> est le bruit le plus fort que vous puissiez faire."
+                </h2>
+                <div class="mt-12 flex items-center justify-center gap-4">
+                    <div class="h-px w-12 bg-white/20"></div>
+                    <p class="font-mono text-primary uppercase tracking-widest text-sm">par CloudyMagine</p>
+                    <div class="h-px w-12 bg-white/20"></div>
                 </div>
-            </section>
+            </div>
+            <div class="absolute -right-40 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-secondary/5 rounded-full blur-[150px]"></div>
+        </section>
 
-            <section class="py-12 border-y border-white/5 bg-black/20 backdrop-blur-sm">
-                <div class="marquee-wrap">
-                    <div class="marquee-inner flex gap-16 items-center opacity-40">
-                        <span class="text-4xl font-display font-bold text-stroke">REACT</span>
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                        <span class="text-4xl font-display font-bold text-stroke">WEBGL</span>
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                        <span class="text-4xl font-display font-bold text-stroke">THREE.JS</span>
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                        <span class="text-4xl font-display font-bold text-stroke">NODE</span>
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                        <span class="text-4xl font-display font-bold text-stroke">PYTHON</span>
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                        <span class="text-4xl font-display font-bold text-stroke">AI/LLM</span>
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                        <span class="text-4xl font-display font-bold text-stroke">REACT</span>
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                        <span class="text-4xl font-display font-bold text-stroke">WEBGL</span>
-                        <i class="fa-solid fa-bolt text-primary"></i>
-                    </div>
+        <section class="py-12 border-y border-white/5 overflow-hidden relative">
+            <div class="flex gap-24 animate-marquee whitespace-nowrap items-center opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
+                <i class="fa-brands fa-aws text-5xl"></i><i class="fa-brands fa-google text-4xl"></i>
+                <i class="fa-brands fa-spotify text-5xl"></i><i class="fa-brands fa-apple text-5xl"></i>
+                <i class="fa-brands fa-stripe text-5xl"></i><i class="fa-brands fa-meta text-5xl"></i>
+                <i class="fa-brands fa-nike text-5xl"></i><i class="fa-brands fa-discord text-4xl"></i>
+                <i class="fa-brands fa-aws text-5xl"></i><i class="fa-brands fa-google text-4xl"></i>
+                <i class="fa-brands fa-spotify text-5xl"></i><i class="fa-brands fa-apple text-5xl"></i>
+            </div>
+        </section>
+
+        <section class="py-32 px-6">
+            <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="p-8 border border-white/5 rounded-3xl bg-white/[0.02] hover:border-primary/30 transition-colors">
+                    <div class="text-5xl font-display font-bold text-primary mb-2">2M+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest font-bold">Vues Générées</div>
                 </div>
-            </section>
+                <div class="p-8 border border-white/5 rounded-3xl bg-white/[0.02] hover:border-secondary/30 transition-colors">
+                    <div class="text-5xl font-display font-bold text-secondary mb-2">150+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest font-bold">Projets Livrés</div>
+                </div>
+                <div class="p-8 border border-white/5 rounded-3xl bg-white/[0.02] hover:border-accent/30 transition-colors">
+                    <div class="text-5xl font-display font-bold text-accent mb-2">98%</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest font-bold">Satisfaction</div>
+                </div>
+                <div class="p-8 border border-white/5 rounded-3xl bg-white/[0.02] hover:border-white/30 transition-colors">
+                    <div class="text-5xl font-display font-bold text-white mb-2">24h</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest font-bold">Support</div>
+                </div>
+            </div>
+        </section>
 
-            <section class="py-32 px-6 max-w-[1600px] mx-auto">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                    <div class="lg:col-span-4 sticky top-32 h-fit">
-                        <span class="text-primary font-mono text-xs uppercase tracking-widest mb-4 block">Expertise</span>
-                        <h2 class="text-5xl font-display font-bold mb-6">La Trinité<br>Digitale.</h2>
-                        <p class="text-gray-400 leading-relaxed mb-8">
-                            Nous avons banni les silos. Design, Code et Marketing sont une seule et même discipline chez CloudyMagine.
+        <section class="relative py-40 border-t border-white/5">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-32">
+                    <div class="hidden lg:block h-[600px] sticky top-40">
+                        <span class="text-primary font-mono text-sm mb-6 block">/// NOTRE ADN</span>
+                        <h2 class="text-7xl font-display font-bold mb-10 leading-tight">
+                            L'Art de <br> <span class="text-liquid">L'Invisible.</span>
+                        </h2>
+                        <p class="text-xl text-gray-400 max-w-md leading-relaxed border-l-2 border-white/10 pl-6 mb-10">
+                            La meilleure technologie est celle qui ne se voit pas. Nous créons des expériences fluides où le design s'efface au profit de l'émotion brute.
                         </p>
-                        <ul class="space-y-4 font-mono text-sm text-gray-500">
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Approche Atomique</li>
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Performance < 90ms</li>
-                            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-primary"></i> Conversion First</li>
-                        </ul>
-                    </div>
-                    <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="glass-panel p-10 rounded-[2rem] group hover:bg-white/5 transition-all duration-500" data-magnet="true">
-                            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl text-primary mb-8 group-hover:scale-110 transition-transform"><i class="fa-solid fa-cube"></i></div>
-                            <h3 class="text-2xl font-bold mb-4">Branding Systémique</h3>
-                            <p class="text-gray-400 text-sm leading-relaxed">Nous ne dessinons pas des logos. Nous créons des langages visuels complets qui s'adaptent à tous les supports, du favicon au billboard 4K.</p>
-                        </div>
-                        <div class="glass-panel p-10 rounded-[2rem] group hover:bg-white/5 transition-all duration-500" data-magnet="true">
-                            <div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center text-2xl text-secondary mb-8 group-hover:scale-110 transition-transform"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
-                            <h3 class="text-2xl font-bold mb-4">Ingénierie Créative</h3>
-                            <p class="text-gray-400 text-sm leading-relaxed">Utilisation de WebGL et d'animations fluides pour retenir l'attention. Le code est notre pinceau le plus puissant.</p>
-                        </div>
-                        <div class="glass-panel p-10 rounded-[2rem] group hover:bg-white/5 transition-all duration-500" data-magnet="true">
-                            <div class="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center text-2xl text-accent mb-8 group-hover:scale-110 transition-transform"><i class="fa-solid fa-bullseye"></i></div>
-                            <h3 class="text-2xl font-bold mb-4">Acquisition (Ads)</h3>
-                            <p class="text-gray-400 text-sm leading-relaxed">Le plus beau site du monde ne sert à rien si personne ne le voit. Nous pilotons vos campagnes Meta/Google avec une rigueur mathématique.</p>
-                        </div>
-                        <div class="glass-panel p-10 rounded-[2rem] group hover:bg-white/5 transition-all duration-500" data-magnet="true">
-                            <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center text-2xl text-white mb-8 group-hover:scale-110 transition-transform"><i class="fa-solid fa-video"></i></div>
-                            <h3 class="text-2xl font-bold mb-4">Post-Production</h3>
-                            <p class="text-gray-400 text-sm leading-relaxed">Montage rythmé, Sound Design immersif, Color Grading cinéma. Nous transformons vos rushs en dopamine.</p>
+                        <div class="flex items-center gap-4">
+                            <img src="logo_icon.png" class="h-10 w-auto grayscale opacity-50">
+                            <span class="text-sm text-gray-500">Depuis 2022</span>
                         </div>
                     </div>
-                </div>
-            </section>
-
-            <section class="py-20 border-y border-white/5">
-                <div class="max-w-[1200px] mx-auto grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
-                    <div>
-                        <div class="text-5xl font-display font-bold text-white mb-2" data-counter="150">0</div>
-                        <div class="text-xs font-mono uppercase text-gray-500 tracking-widest">Projets Livrés</div>
-                    </div>
-                    <div>
-                        <div class="text-5xl font-display font-bold text-primary mb-2" data-counter="20">0</div>
-                        <div class="text-xs font-mono uppercase text-gray-500 tracking-widest">Pays Touchés</div>
-                    </div>
-                    <div>
-                        <div class="text-5xl font-display font-bold text-secondary mb-2" data-counter="98">0</div>
-                        <div class="text-xs font-mono uppercase text-gray-500 tracking-widest">% Satisfaction</div>
-                    </div>
-                    <div>
-                        <div class="text-5xl font-display font-bold text-accent mb-2" data-counter="3">0</div>
-                        <div class="text-xs font-mono uppercase text-gray-500 tracking-widest">Années d'Exp.</div>
-                    </div>
-                </div>
-            </section>
-        </main>
-
-        <main id="page-agency" class="page-content min-h-screen w-full hidden pt-32 px-6">
-            <div class="max-w-[1400px] mx-auto">
-                <div class="mb-20">
-                    <h1 class="text-6xl md:text-8xl font-display font-bold mb-6">L'Agence.</h1>
-                    <p class="text-xl text-gray-400 max-w-2xl">Basée entre Bordeaux et la Norvège. Le chaud et le froid. La passion et la rigueur.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-16 mb-32">
-                    <div class="glass-panel p-12 rounded-[3rem] relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                        <h3 class="text-3xl font-bold mb-4">Bastien</h3>
-                        <p class="text-sm font-mono text-primary mb-6">CREATIVE DIRECTOR</p>
-                        <p class="text-gray-400 leading-relaxed mb-8">L'œil esthétique. Obsédé par le détail qui tue, la typographie parfaite et le mouvement fluide. Il s'assure que chaque pixel justifie son existence.</p>
-                        <div class="flex gap-4">
-                            <span class="px-3 py-1 rounded-full bg-white/5 text-xs">Design</span>
-                            <span class="px-3 py-1 rounded-full bg-white/5 text-xs">Vision</span>
-                        </div>
-                    </div>
-                    <div class="glass-panel p-12 rounded-[3rem] relative overflow-hidden group">
-                        <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                        <h3 class="text-3xl font-bold mb-4">Pierre</h3>
-                        <p class="text-sm font-mono text-secondary mb-6">TECH LEAD</p>
-                        <p class="text-gray-400 leading-relaxed mb-8">Le cerveau logique. Expert en infrastructures complexes et optimisation. Il transforme les rêves visuels de Bastien en code performant.</p>
-                        <div class="flex gap-4">
-                            <span class="px-3 py-1 rounded-full bg-white/5 text-xs">Dev</span>
-                            <span class="px-3 py-1 rounded-full bg-white/5 text-xs">Scale</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-l-2 border-white/10 pl-10 ml-4 md:ml-20 mb-32">
-                    <h4 class="text-sm font-mono uppercase text-gray-500 mb-6">Manifesto 2025</h4>
-                    <p class="text-2xl md:text-4xl font-light leading-snug text-gray-300">
-                        "Nous croyons que le design n'est pas de l'art. L'art pose des questions, le design apporte des solutions. Dans un monde saturé de bruit, <span class="text-white font-bold">le silence d'une interface parfaite</span> est le bruit le plus fort que vous puissiez faire."
-                    </p>
-                </div>
-            </div>
-        </main>
-
-        <main id="page-portfolio" class="page-content min-h-screen w-full hidden pt-32 px-6">
-            <div class="max-w-[1600px] mx-auto">
-                <div class="flex justify-between items-end mb-20 border-b border-white/10 pb-10">
-                    <h1 class="text-6xl font-display font-bold">Œuvres.</h1>
-                    <div class="flex gap-2">
-                        <button class="px-4 py-2 rounded-full bg-white text-black text-xs font-bold uppercase">Tous</button>
-                        <button class="px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 text-xs font-bold uppercase">Web</button>
-                        <button class="px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 text-xs font-bold uppercase">Branding</button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pb-32">
-                    
-                    <div onclick="openModal(0)" class="group relative h-[600px] cursor-pointer overflow-hidden rounded-[2rem]" data-magnet="true">
-                        <img src="images/BMJ/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" alt="Project">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <span class="text-primary font-mono text-xs uppercase tracking-widest mb-2 block">Youtube Growth</span>
-                                    <h2 class="text-5xl font-display font-bold mb-2">BMJ Prod</h2>
-                                    <p class="text-gray-400 text-sm max-w-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">Refonte complète de l'identité visuelle pour une chaîne à 1M d'abonnés.</p>
-                                </div>
-                                <div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
-                                    <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-500"></i>
-                                </div>
+                    <div class="space-y-24 pt-20">
+                        <div class="glass-panel p-12 rounded-[2.5rem] group hover:border-primary/50 transition-all duration-500" data-aos="fade-up">
+                            <div class="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center text-4xl text-primary mb-8 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-bolt"></i>
                             </div>
+                            <h3 class="text-3xl font-bold mb-4">Impact Neuro-Visuel</h3>
+                            <p class="text-gray-400 text-lg">Chaque couleur, chaque mouvement est calculé pour déclencher une réponse cognitive spécifique. Nous ne faisons pas du "joli", nous faisons de l'efficace.</p>
                         </div>
-                    </div>
-
-                    <div onclick="openModal(1)" class="group relative h-[600px] cursor-pointer overflow-hidden rounded-[2rem]" data-magnet="true">
-                        <img src="images/SUKO/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" alt="Project">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <span class="text-secondary font-mono text-xs uppercase tracking-widest mb-2 block">Beverage Branding</span>
-                                    <h2 class="text-5xl font-display font-bold mb-2">Suko Drinks</h2>
-                                    <p class="text-gray-400 text-sm max-w-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">Packaging et stratégie de lancement pour boisson énergisante.</p>
-                                </div>
-                                <div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
-                                    <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-500"></i>
-                                </div>
+                        <div class="glass-panel p-12 rounded-[2.5rem] group hover:border-secondary/50 transition-all duration-500" data-aos="fade-up">
+                            <div class="w-20 h-20 rounded-full bg-secondary/10 flex items-center justify-center text-4xl text-secondary mb-8 group-hover:scale-100 transition-transform">
+                                <i class="fa-solid fa-microchip"></i>
                             </div>
+                            <h3 class="text-3xl font-bold mb-4">Ingénierie Créative</h3>
+                            <p class="text-gray-400 text-lg">Nous utilisons des outils d'IA générative propriétaires et des scripts d'automatisation pour réduire les coûts et augmenter la qualité finale.</p>
                         </div>
-                    </div>
-
-                    <div onclick="openModal(2)" class="group relative h-[600px] cursor-pointer overflow-hidden rounded-[2rem]" data-magnet="true">
-                        <img src="images/CM/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" alt="Project">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <span class="text-accent font-mono text-xs uppercase tracking-widest mb-2 block">Web Experience</span>
-                                    <h2 class="text-5xl font-display font-bold mb-2">CloudyMagine</h2>
-                                    <p class="text-gray-400 text-sm max-w-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">Notre propre vitrine digitale. L'art de l'invisible.</p>
-                                </div>
-                                <div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
-                                    <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-500"></i>
-                                </div>
+                        <div class="glass-panel p-12 rounded-[2.5rem] group hover:border-accent/50 transition-all duration-500" data-aos="fade-up">
+                            <div class="w-20 h-20 rounded-full bg-accent/10 flex items-center justify-center text-4xl text-accent mb-8 group-hover:scale-100 transition-transform">
+                                <i class="fa-solid fa-globe"></i>
                             </div>
+                            <h3 class="text-3xl font-bold mb-4">Culture Sans Frontières</h3>
+                            <p class="text-gray-400 text-lg">Basés entre Bordeaux et la Norvège, nous apportons une rigueur scandinave mélangée à une créativité latine.</p>
                         </div>
-                    </div>
-
-                    <div onclick="openModal(3)" class="group relative h-[600px] cursor-pointer overflow-hidden rounded-[2rem]" data-magnet="true">
-                        <img src="images/TLPB/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-1000 group-hover:scale-110 filter grayscale group-hover:grayscale-0" alt="Project">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-60 group-hover:opacity-40 transition-opacity"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-10 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                            <div class="flex justify-between items-end">
-                                <div>
-                                    <span class="text-white font-mono text-xs uppercase tracking-widest mb-2 block">Merchandise</span>
-                                    <h2 class="text-5xl font-display font-bold mb-2">TLPB</h2>
-                                    <p class="text-gray-400 text-sm max-w-md opacity-0 group-hover:opacity-100 transition-opacity delay-100">Direction artistique et textile pour groupe de rock.</p>
-                                </div>
-                                <div class="w-16 h-16 rounded-full border border-white/20 flex items-center justify-center bg-white/10 backdrop-blur-md group-hover:bg-white group-hover:text-black transition-all">
-                                    <i class="fa-solid fa-arrow-right -rotate-45 group-hover:rotate-0 transition-transform duration-500"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </main>
-
-        <main id="page-start" class="page-content min-h-screen w-full hidden flex items-center justify-center pt-20 px-6 bg-surface">
-            <div class="w-full max-w-3xl">
-                <div class="mb-12">
-                    <div class="flex items-center gap-4 mb-4 text-sm font-mono text-gray-500">
-                        <span id="step-indicator-1" class="text-primary">01. Brief</span>
-                        <span class="w-8 h-px bg-white/10"></span>
-                        <span id="step-indicator-2">02. Budget</span>
-                        <span class="w-8 h-px bg-white/10"></span>
-                        <span id="step-indicator-3">03. Contact</span>
-                    </div>
-                    <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="h-full bg-primary w-1/3 transition-all duration-500"></div>
-                    </div>
-                </div>
-
-                <div id="form-step-1" class="form-step block">
-                    <h2 class="text-5xl font-display font-bold mb-10">Que construisons-nous ?</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <button onclick="formEngine.select('type', 'Site Web', 2)" class="text-left p-8 glass-panel rounded-2xl hover:border-primary transition-all group">
-                            <i class="fa-solid fa-globe text-3xl text-gray-600 group-hover:text-primary mb-4 transition-colors"></i>
-                            <h3 class="text-xl font-bold">Site Expérientiel</h3>
-                        </button>
-                        <button onclick="formEngine.select('type', 'Branding', 2)" class="text-left p-8 glass-panel rounded-2xl hover:border-secondary transition-all group">
-                            <i class="fa-solid fa-fingerprint text-3xl text-gray-600 group-hover:text-secondary mb-4 transition-colors"></i>
-                            <h3 class="text-xl font-bold">Identité de Marque</h3>
-                        </button>
-                        <button onclick="formEngine.select('type', 'Video', 2)" class="text-left p-8 glass-panel rounded-2xl hover:border-accent transition-all group">
-                            <i class="fa-solid fa-play text-3xl text-gray-600 group-hover:text-accent mb-4 transition-colors"></i>
-                            <h3 class="text-xl font-bold">Production Vidéo</h3>
-                        </button>
-                        <button onclick="formEngine.select('type', 'Autre', 2)" class="text-left p-8 glass-panel rounded-2xl hover:border-white transition-all group">
-                            <i class="fa-solid fa-asterisk text-3xl text-gray-600 group-hover:text-white mb-4 transition-colors"></i>
-                            <h3 class="text-xl font-bold">Autre Demande</h3>
-                        </button>
-                    </div>
-                </div>
-
-                <div id="form-step-2" class="form-step hidden">
-                    <h2 class="text-5xl font-display font-bold mb-10">Ordre de grandeur ?</h2>
-                    <div class="space-y-4">
-                        <button onclick="formEngine.select('budget', '< 2k', 3)" class="w-full text-left p-6 glass-panel rounded-xl hover:bg-white/10 transition-all flex justify-between items-center group">
-                            <span class="text-xl font-bold">Projet Starter (< 2k€)</span>
-                            <i class="fa-solid fa-arrow-right opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </button>
-                        <button onclick="formEngine.select('budget', '2k-10k', 3)" class="w-full text-left p-6 glass-panel rounded-xl hover:bg-white/10 transition-all flex justify-between items-center group border border-primary/20">
-                            <span class="text-xl font-bold text-primary">Business Standard (2k€ - 10k€)</span>
-                            <i class="fa-solid fa-arrow-right opacity-0 group-hover:opacity-100 transition-opacity text-primary"></i>
-                        </button>
-                        <button onclick="formEngine.select('budget', '10k+', 3)" class="w-full text-left p-6 glass-panel rounded-xl hover:bg-white/10 transition-all flex justify-between items-center group">
-                            <span class="text-xl font-bold">Empire Scale (> 10k€)</span>
-                            <i class="fa-solid fa-arrow-right opacity-0 group-hover:opacity-100 transition-opacity"></i>
-                        </button>
-                    </div>
-                    <button onclick="formEngine.back(1)" class="mt-8 text-gray-500 hover:text-white text-sm">← Retour</button>
-                </div>
-
-                <div id="form-step-3" class="form-step hidden">
-                    <h2 class="text-5xl font-display font-bold mb-2">Dernière étape.</h2>
-                    <p class="text-gray-400 mb-10">Où devons-nous envoyer l'estimation PDF ?</p>
-                    <form onsubmit="event.preventDefault(); formEngine.submit();" class="relative">
-                        <input type="email" id="user-email" class="w-full bg-transparent border-b-2 border-white/10 py-4 text-3xl font-bold outline-none focus:border-primary transition-colors placeholder-gray-700" placeholder="votre@email.com" required>
-                        <button type="submit" class="absolute right-0 top-4 text-xl text-primary hover:text-white transition-colors">
-                            <i class="fa-solid fa-paper-plane"></i>
-                        </button>
-                    </form>
-                    <button onclick="formEngine.back(2)" class="mt-8 text-gray-500 hover:text-white text-sm">← Retour</button>
-                </div>
-
-                <div id="form-success" class="form-step hidden text-center">
-                    <div class="w-32 h-32 rounded-full bg-success/10 flex items-center justify-center text-5xl text-success mx-auto mb-8 animate-bounce">
-                        <i class="fa-solid fa-check"></i>
-                    </div>
-                    <h2 class="text-4xl font-bold mb-4">Message Transmis.</h2>
-                    <p class="text-gray-400 mb-8">Un PDF d'estimation a été généré. Bastien ou Pierre vous recontactera sous 24h.</p>
-                    <button onclick="router.go('home')" class="px-8 py-3 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform">Retour au QG</button>
-                </div>
-            </div>
-        </main>
-
-        <main id="page-dashboard" class="page-content min-h-screen w-full hidden pt-32 px-6">
-            <div class="max-w-[1400px] mx-auto">
-                <div class="flex justify-between items-center mb-12">
-                    <h1 class="text-4xl font-display font-bold">Espace Client <span class="text-xs bg-primary/20 text-primary px-2 py-1 rounded ml-2">DEMO</span></h1>
-                    <div class="flex items-center gap-4">
-                        <div class="text-right hidden md:block">
-                            <div class="text-sm font-bold">Elon Musk</div>
-                            <div class="text-xs text-gray-500">Tesla Corp.</div>
-                        </div>
-                        <div class="w-12 h-12 rounded-full bg-gray-800 overflow-hidden border border-white/10">
-                            <img src="https://i.pravatar.cc/150?img=11" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="glass-panel p-8 rounded-3xl lg:col-span-2">
-                        <h3 class="font-bold mb-6 flex items-center gap-2"><i class="fa-solid fa-chart-line text-primary"></i> Performances Live</h3>
-                        <canvas id="clientChart" height="100"></canvas>
-                    </div>
-                    <div class="glass-panel p-8 rounded-3xl bg-gradient-to-br from-primary/10 to-transparent border-primary/30">
-                        <h3 class="font-bold mb-4 text-primary">Projet en cours</h3>
-                        <div class="text-3xl font-bold mb-2">Cybertruck LP</div>
-                        <div class="w-full bg-black/30 h-2 rounded-full mb-4 overflow-hidden">
-                            <div class="h-full bg-primary w-[75%]"></div>
-                        </div>
-                        <div class="flex justify-between text-xs text-gray-400 mb-8">
-                            <span>Dev</span>
-                            <span>75%</span>
-                        </div>
-                        <button class="w-full py-3 rounded-xl bg-white text-black font-bold hover:bg-gray-200">Voir la Maquette</button>
-                    </div>
-                    <div class="glass-panel p-8 rounded-3xl">
-                        <h3 class="font-bold mb-6">Fichiers Récents</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-center justify-between p-3 hover:bg-white/5 rounded-lg cursor-pointer">
-                                <div class="flex items-center gap-3"><i class="fa-solid fa-file-pdf text-red-400"></i> <span>Devis_Final_v2.pdf</span></div>
-                                <i class="fa-solid fa-download text-gray-500"></i>
-                            </li>
-                            <li class="flex items-center justify-between p-3 hover:bg-white/5 rounded-lg cursor-pointer">
-                                <div class="flex items-center gap-3"><i class="fa-solid fa-image text-blue-400"></i> <span>Maquette_Home.png</span></div>
-                                <i class="fa-solid fa-download text-gray-500"></i>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
-        </main>
+        </section>
+    </main>
 
-        <footer class="bg-black py-20 px-6 mt-32 border-t border-white/10 relative z-10">
-            <div class="max-w-[1600px] mx-auto flex flex-col md:flex-row justify-between gap-12">
+    <main id="page-about" class="page-section pt-32 min-h-screen">
+        <div class="max-w-[1600px] mx-auto px-6 pb-40">
+            <h1 class="text-6xl font-display font-bold mb-8">L'Agence <span class="text-primary">Cloudy</span></h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                 <div>
-                    <img src="logo_icon.png" class="w-12 h-auto opacity-50 mb-6">
-                    <p class="text-gray-500 max-w-xs text-sm">CloudyMagine est une entité indépendante. Nous ne suivons pas les tendances, nous les codons.</p>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-12 text-sm">
-                    <div>
-                        <h4 class="font-bold text-white mb-4 uppercase tracking-widest text-xs">Studio</h4>
-                        <ul class="space-y-2 text-gray-500">
-                            <li><a href="#" onclick="router.go('agency')" class="hover:text-primary transition-colors">L'Équipe</a></li>
-                            <li><a href="#" onclick="router.go('portfolio')" class="hover:text-primary transition-colors">Case Studies</a></li>
-                            <li><a href="#" onclick="router.go('contact')" class="hover:text-primary transition-colors">Jobs</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-white mb-4 uppercase tracking-widest text-xs">Legal</h4>
-                        <ul class="space-y-2 text-gray-500">
-                            <li><a href="#" class="hover:text-primary transition-colors">CGV</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">Confidentialité</a></li>
-                            <li><a href="#" class="hover:text-primary transition-colors">Mentions</a></li>
-                        </ul>
+                    <p class="text-xl text-gray-400 mb-6">Fondée sur la conviction que le design doit être fonctionnel autant qu'esthétique. Nous sommes une équipe distribuée opérant aux frontières de l'art et de la technologie.</p>
+                    <div class="grid grid-cols-2 gap-4 mt-10">
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <h4 class="font-bold text-2xl mb-2">Bastien</h4>
+                            <p class="text-sm text-gray-500 uppercase">Creative Director</p>
+                        </div>
+                        <div class="glass-panel p-6 rounded-2xl">
+                            <h4 class="font-bold text-2xl mb-2">Pierre</h4>
+                            <p class="text-sm text-gray-500 uppercase">Tech Lead</p>
+                        </div>
                     </div>
                 </div>
-                <div class="text-right text-gray-600 text-xs">
-                    <p>&copy; 2025 CloudyMagine.</p>
-                    <p>Bordeaux • Volda</p>
+                <div class="h-[500px] bg-white/5 rounded-[3rem] border border-white/10 relative overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition duration-700">
                 </div>
             </div>
-        </footer>
+        </div>
+    </main>
 
-    </div> <div id="modal-overlay" class="fixed inset-0 bg-black/90 z-[200] hidden opacity-0 transition-opacity duration-500 backdrop-blur-xl overflow-y-auto">
-        <button onclick="closeModal()" class="fixed top-8 right-8 z-[210] w-14 h-14 rounded-full bg-white text-black flex items-center justify-center hover:scale-110 transition-transform">
-            <i class="fa-solid fa-xmark text-xl"></i>
-        </button>
+    <main id="page-contact" class="page-section pt-32 min-h-screen">
+        <div class="max-w-5xl mx-auto px-6 pb-40">
+            <div class="text-center mb-20">
+                <h1 class="text-6xl font-display font-bold mb-4">Parlons <span class="text-liquid">Futur</span></h1>
+                <p class="text-gray-400">Pour les partenariats, presse, ou questions générales.</p>
+            </div>
+            <div class="glass-panel p-12 rounded-[3rem] border border-white/10">
+                <form class="space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Nom</label>
+                            <input type="text" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Email</label>
+                            <input type="email" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Message</label>
+                        <textarea rows="5" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none"></textarea>
+                    </div>
+                    <button class="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition">Envoyer le message</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+<main id="page-portfolio" class="page-section pt-32 min-h-screen">
+        <div class="max-w-[1600px] mx-auto px-6 pb-40">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 border-b border-white/10 pb-10">
+                <div>
+                    <h1 class="text-6xl md:text-8xl font-display font-bold mb-4">Nos <span class="text-liquid">Œuvres</span></h1>
+                    <p class="text-xl text-gray-400 max-w-lg">Une curation de nos 6 projets majeurs.</p>
+                </div>
+                <div class="flex gap-4 mt-8 md:mt-0">
+                    <button class="px-6 py-2 rounded-full bg-white text-black font-bold transition hover:scale-105">Tout</button>
+                    <button class="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:text-white hover:border-white transition">Films</button>
+                    <button class="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:text-white hover:border-white transition">Identité</button>
+                </div>
+            </div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="works-grid">
+                
+                <div class="group work-item cursor-pointer" onclick="openProject(0)" data-aos="fade-up">
+                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
+                        <img src="images/BMJ/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="BMJ Chaine Youtube">
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">YouTube</span>
+                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-primary transition-colors">BMJ Prod</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group work-item cursor-pointer" onclick="openProject(1)" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
+                        <img src="images/BMJ_Esport/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="BMJ Esport">
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Gaming</span>
+                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-secondary transition-colors">BMJ Esport</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group work-item cursor-pointer" onclick="openProject(2)" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
+                        <img src="images/CM/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="CloudyMagine">
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Agence 360°</span>
+                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-accent transition-colors">CloudyMagine</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group work-item cursor-pointer" onclick="openProject(3)" data-aos="fade-up">
+                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
+                        <img src="images/Court_Metrage/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Court Métrage">
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Cinéma</span>
+                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-primary transition-colors">Transmission Inconnu</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group work-item cursor-pointer" onclick="openProject(4)" data-aos="fade-up" data-aos-delay="100">
+                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
+                        <img src="images/SUKO/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="SUKO Boisson">
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Branding</span>
+                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-secondary transition-colors">Suko Drinks</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group work-item cursor-pointer" onclick="openProject(5)" data-aos="fade-up" data-aos-delay="200">
+                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
+                        <img src="images/TLPB/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="TLPB">
+                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
+                        <div class="absolute bottom-6 left-6">
+                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Merch & Art</span>
+                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-accent transition-colors">The Lil Peter Band</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+<main id="page-project-view" class="page-section pt-24 min-h-screen overflow-x-hidden">
         
-        <div class="min-h-screen w-full relative">
-            <div class="h-[70vh] w-full relative">
-                <img id="modal-img-hero" src="" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
-                <div class="absolute bottom-0 left-0 p-6 md:p-20">
-                    <h1 id="modal-title" class="text-6xl md:text-9xl font-display font-bold mb-4">Project Name</h1>
-                    <p id="modal-cat" class="text-primary font-mono uppercase tracking-widest text-xl">Category</p>
-                </div>
+        <div class="max-w-4xl mx-auto px-6 text-center relative z-10 mb-12">
+             <div class="absolute left-6 top-0 hidden md:block">
+                 <button onclick="routeTo('portfolio')" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition group">
+                    <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                </button>
             </div>
-            
-            <div class="max-w-[1200px] mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-3 gap-16">
-                <div class="md:col-span-2">
-                    <h3 class="text-2xl font-bold mb-6">Le Challenge</h3>
-                    <p id="modal-desc" class="text-gray-400 text-lg leading-relaxed mb-10">Description here.</p>
-                    
-                    <div class="grid grid-cols-1 gap-8">
-                        <img id="modal-img-2" src="" class="w-full h-auto rounded-2xl border border-white/10">
-                        <img id="modal-img-3" src="" class="w-full h-auto rounded-2xl border border-white/10">
-                    </div>
-                </div>
-                <div class="md:col-span-1">
-                    <div class="sticky top-20 p-8 glass-panel rounded-2xl">
-                        <h4 class="font-bold mb-4 uppercase text-xs text-gray-500">Services</h4>
-                        <ul id="modal-services" class="space-y-2 mb-8 text-sm"></ul>
-                        <h4 class="font-bold mb-4 uppercase text-xs text-gray-500">Date</h4>
-                        <p class="text-sm mb-8">2024</p>
-                        <button class="w-full py-3 border border-white/20 rounded-lg hover:bg-white hover:text-black transition-colors font-bold">Voir en ligne ↗</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+            <button onclick="routeTo('portfolio')" class="md:hidden mb-8 flex items-center gap-2 text-gray-400"><i class="fa-solid fa-arrow-left"></i> Retour</button>
 
-    <div class="fixed bottom-8 right-8 z-[100] group">
-        <div id="bot-msg" class="absolute bottom-16 right-0 w-64 p-4 glass-panel rounded-2xl rounded-br-none mb-2 opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto">
-            <p class="text-xs text-gray-300">Besoin d'une estimation rapide ? Je peux générer un PDF en 2 minutes.</p>
-            <button onclick="router.go('start')" class="mt-2 text-primary text-xs font-bold underline">Lancer l'IA</button>
+            <span id="detail-cat" class="text-primary font-mono text-sm uppercase tracking-[0.3em] mb-6 inline-block neon-glow">Catégorie</span>
+            <h1 id="detail-title" class="text-5xl md:text-8xl font-display font-bold mb-8 drop-shadow-2xl">Titre du Projet</h1>
+            <p id="detail-desc" class="text-xl md:text-2xl text-gray-300 leading-relaxed font-light">Description...</p>
         </div>
-        <button class="w-14 h-14 rounded-full bg-gradient-to-r from-primary to-secondary text-white shadow-[0_0_20px_rgba(206,143,255,0.5)] flex items-center justify-center text-xl hover:scale-110 transition-transform">
+
+        <div class="w-full h-[70vh] relative mb-24 overflow-hidden group">
+            <div class="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-dark z-10 pointer-events-none"></div>
+            <img id="img-1" src="" class="w-full h-full object-cover object-center transition duration-[2s] group-hover:scale-105">
+        </div>
+
+
+        <div class="max-w-[1400px] mx-auto px-6 pb-32">
+            
+            <div class="flex flex-col md:flex-row items-center gap-16 mb-32 relative">
+                <div class="w-full md:w-3/5 h-[600px] rounded-[3rem] overflow-hidden border border-white/5 relative group relative z-10">
+                     <img id="img-2" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                 <div class="w-full md:w-2/5 relative z-20 md:-ml-20 mt-10 md:mt-0">
+                    <div class="glass-panel p-10 rounded-[2rem] backdrop-blur-xl border-white/10 shadow-2xl">
+                        <h3 class="text-3xl font-display font-bold mb-4">Le Concept</h3>
+                        <p id="detail-concept" class="text-gray-400 text-lg leading-relaxed">
+                            </p>
+                    </div>
+                </div>
+                <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-32">
+                <div class="h-[500px] md:h-[700px] rounded-[3rem] overflow-hidden border border-white/5 relative group md:mt-20">
+                     <img id="img-3" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                <div class="h-[500px] md:h-[700px] rounded-[3rem] overflow-hidden border border-white/5 relative group">
+                     <img id="img-4" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+            </div>
+
+            <div class="flex flex-col md:flex-row-reverse items-center gap-16 mb-32 relative">
+                <div class="w-full md:w-3/5 h-[600px] rounded-[3rem] overflow-hidden border border-white/5 relative group z-10">
+                     <img id="img-5" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                 <div class="w-full md:w-2/5 relative z-20 md:-mr-20 mt-10 md:mt-0 text-right">
+                    <div class="glass-panel p-10 rounded-[2rem] backdrop-blur-xl border-white/10 shadow-2xl">
+                        <h3 class="text-3xl font-display font-bold mb-4 text-secondary">Le Résultat</h3>
+                        <p id="detail-result" class="text-gray-400 text-lg leading-relaxed">
+                             </p>
+                    </div>
+                </div>
+                 <div class="absolute top-1/2 left-0 -translate-y-1/2 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px] -z-10"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <main id="page-devis" class="page-section pt-32 min-h-screen">
+        <div class="max-w-[1600px] mx-auto px-6 pb-40 flex flex-col lg:flex-row gap-12">
+            
+            <div class="lg:w-2/3">
+                <div class="glass-panel rounded-[3rem] p-10 border border-white/10 shadow-2xl relative overflow-hidden min-h-[800px]">
+                    
+                    <div class="flex items-center mb-16 text-sm font-mono tracking-widest uppercase text-gray-500">
+                        <span class="text-primary" id="step-text-1">01. Service</span>
+                        <div class="w-12 h-px bg-white/10 mx-4"></div>
+                        <span id="step-text-2">02. Options</span>
+                        <div class="w-12 h-px bg-white/10 mx-4"></div>
+                        <span id="step-text-3">03. Validation</span>
+                    </div>
+
+                    <div id="view-1" class="step-view">
+                        <h2 class="text-4xl font-display font-bold mb-10">Quel est votre objectif ?</h2>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div onmouseenter="showTooltip('montage')" onclick="selectMainService('montage', this, 'primary')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-primary hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-primary transition-colors"><i class="fa-solid fa-film"></i></div>
+                                    <div>
+                                        <h4 class="text-2xl font-bold mb-1">Post-Production</h4>
+                                        <p class="text-gray-500">Montage, VFX, Sound Design</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div onmouseenter="showTooltip('branding')" onclick="selectMainService('branding', this, 'secondary')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-secondary hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-secondary transition-colors"><i class="fa-solid fa-fingerprint"></i></div>
+                                    <div>
+                                        <h4 class="text-2xl font-bold mb-1">Identité Visuelle</h4>
+                                        <p class="text-gray-500">Logos, Chartes, Systèmes</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div onmouseenter="showTooltip('miniature')" onclick="selectMainService('miniature', this, 'accent')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-accent hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
+                                <div class="flex items-center gap-6">
+                                    <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-accent transition-colors"><i class="fa-solid fa-bullseye"></i></div>
+                                    <div>
+                                        <h4 class="text-2xl font-bold mb-1">Acquisition</h4>
+                                        <p class="text-gray-500">Miniatures, Ads, A/B Tests</p>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="view-2" class="step-view hidden">
+                        <h2 class="text-3xl font-display font-bold mb-8">Détails techniques</h2>
+                        <div class="space-y-8">
+                            <div>
+                                <h4 class="text-sm uppercase tracking-widest text-gray-500 mb-4">Format Principal</h4>
+                                <div id="inject-options" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                            </div>
+                            <div>
+                                <h4 class="text-sm uppercase tracking-widest text-gray-500 mb-4">Extensions</h4>
+                                <div id="inject-addons" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between mt-12 pt-8 border-t border-white/10">
+                            <button onclick="switchView(1)" class="text-gray-500 hover:text-white">Retour</button>
+                            <button onclick="switchView(3); computeSummary();" class="px-10 py-3 bg-white text-black font-bold rounded-full hover:scale-105 transition">Finaliser</button>
+                        </div>
+                    </div>
+
+                    <div id="view-3" class="step-view hidden">
+                        <div class="text-center mb-12">
+                            <div class="inline-block w-20 h-20 rounded-full bg-green-500/20 text-green-400 text-4xl flex items-center justify-center mb-6"><i class="fa-solid fa-check"></i></div>
+                            <h2 class="text-4xl font-bold mb-2">Prêt à décoller.</h2>
+                            <p class="text-gray-400">Voici l'estimation prévisionnelle de votre projet.</p>
+                        </div>
+                        
+                        <div class="bg-black/40 p-8 rounded-3xl border border-white/10 mb-8">
+                            <div class="flex justify-between items-end border-b border-white/10 pb-6 mb-6">
+                                <div>
+                                    <div class="text-sm text-gray-500 uppercase mb-1">Service</div>
+                                    <div id="final-service-name" class="text-xl font-bold text-white">--</div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm text-gray-500 uppercase mb-1">Total Estimé</div>
+                                    <div id="final-price" class="text-4xl font-display font-bold text-primary">0 €</div>
+                                </div>
+                            </div>
+                            <div id="final-recap-list" class="space-y-2 text-sm text-gray-300">
+                                </div>
+                        </div>
+
+                        <form onsubmit="event.preventDefault(); submitFinal();" class="flex gap-4">
+                            <input type="email" id="contact-email" placeholder="Email professionnel pour recevoir le PDF" required class="flex-1 p-5 bg-white/5 border border-white/10 rounded-2xl focus:border-primary focus:outline-none text-white">
+                            <button type="submit" class="px-8 rounded-2xl bg-primary text-white font-bold hover:bg-primary/80 transition-all">Envoyer & Télécharger</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="lg:w-1/3 hidden lg:block">
+                <div class="sticky top-32">
+                    <div id="help-panel" class="glass-panel rounded-[2rem] p-8 border border-white/10 min-h-[400px] flex flex-col justify-center transition-all duration-500">
+                        <div id="help-default">
+                            <i class="fa-regular fa-lightbulb text-4xl text-gray-600 mb-6"></i>
+                            <h3 class="text-2xl font-bold text-gray-500 mb-4">Assistant Intelligent</h3>
+                            <p class="text-gray-600">Passez votre souris sur les options pour voir les détails techniques et recommandations.</p>
+                        </div>
+                        <div id="help-content" class="hidden opacity-0 transition-opacity duration-300">
+                            <div id="help-icon" class="text-4xl text-primary mb-6"></div>
+                            <h3 id="help-title" class="text-2xl font-bold text-white mb-4"></h3>
+                            <p id="help-desc" class="text-gray-400 leading-relaxed"></p>
+                            <div class="mt-6 pt-6 border-t border-white/10 flex gap-2">
+                                <span class="px-2 py-1 rounded bg-white/10 text-xs font-mono text-gray-300">Recommandé</span>
+                                <span class="px-2 py-1 rounded bg-white/10 text-xs font-mono text-gray-300">Populaire</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+ <main id="page-privacy" class="page-section pt-32 min-h-screen">
+        <div class="max-w-4xl mx-auto px-6 pb-40">
+            <h1 class="text-4xl font-display font-bold mb-12">Politique de Confidentialité</h1>
+            <div class="space-y-6 text-gray-400 leading-relaxed">
+                <div class="glass-panel p-8 rounded-2xl border border-white/5">
+                    <h3 class="text-xl font-bold text-white mb-4">Données collectées</h3>
+                    <p>Les informations recueillies via le formulaire de contact ou l'espace client (nom, email) sont enregistrées dans un fichier informatisé par CloudyMagine pour la gestion de notre clientèle.</p>
+                </div>
+                <div class="glass-panel p-8 rounded-2xl border border-white/5">
+                    <h3 class="text-xl font-bold text-white mb-4">Cookies</h3>
+                    <p>Ce site utilise des cookies locaux uniquement pour assurer le bon fonctionnement des transitions de page et de l'espace membre.</p>
+                </div>
+                <button onclick="routeTo('home')" class="text-primary hover:text-white mt-4 inline-block font-bold">← Retour au site</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="page-terms" class="page-section pt-32 min-h-screen">
+        <div class="max-w-4xl mx-auto px-6 pb-40">
+            <h1 class="text-4xl font-display font-bold mb-12">Conditions Générales</h1>
+            <div class="space-y-6 text-gray-400 leading-relaxed">
+                <div class="glass-panel p-8 rounded-2xl border border-white/5">
+                    <h3 class="text-xl font-bold text-white mb-4">Prestations</h3>
+                    <p>CloudyMagine s'engage à réaliser les prestations de branding, montage et acquisition telles que définies dans le devis accepté par le client.</p>
+                </div>
+                <div class="glass-panel p-8 rounded-2xl border border-white/5">
+                    <h3 class="text-xl font-bold text-white mb-4">Propriété Intellectuelle</h3>
+                    <p>La cession des droits d'auteur s'effectue à réception du paiement intégral de la facture finale.</p>
+                </div>
+                <button onclick="routeTo('home')" class="text-primary hover:text-white mt-4 inline-block font-bold">← Retour au site</button>
+            </div>
+        </div>
+    </main>
+
+<footer class="bg-black pt-24 pb-12 border-t border-white/10 relative z-10 text-sm">
+        <div class="max-w-[1600px] mx-auto px-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
+                
+                <div class="space-y-8">
+                    <img src="logo_icon.png" alt="CloudyMagine" class="h-10 w-auto opacity-80">
+                    <p class="text-gray-400 leading-relaxed max-w-xs">
+                        Architectes de l'imaginaire. Nous rendons votre marque inoubliable grâce à l'impact neuro-visuel.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all duration-300"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="font-display font-bold uppercase tracking-widest text-white mb-8">Studio</h4>
+                    <ul class="space-y-4">
+                        <li><button onclick="routeTo('about')" class="text-gray-500 hover:text-white transition-colors">L'Agence</button></li>
+                        <li><button onclick="routeTo('portfolio')" class="text-gray-500 hover:text-white transition-colors">Nos Réalisations</button></li>
+                        <li><button onclick="routeTo('dashboard')" class="text-gray-500 hover:text-white transition-colors">Espace Client</button></li>
+                        </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-display font-bold uppercase tracking-widest text-white mb-8">Expertise</h4>
+                    <ul class="space-y-4">
+                        <li><button onclick="routeTo('devis')" class="text-gray-500 hover:text-white transition-colors">Identité Visuelle</button></li>
+                        <li><button onclick="routeTo('devis')" class="text-gray-500 hover:text-white transition-colors">Post-Production Vidéo</button></li>
+                        <li><button onclick="routeTo('devis')" class="text-gray-500 hover:text-white transition-colors">Stratégie d'Acquisition</button></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="font-display font-bold uppercase tracking-widest text-white mb-8">Veille</h4>
+                    <p class="text-gray-500 mb-6">Rejoignez notre liste de diffusion privée.</p>
+                    <form onsubmit="event.preventDefault(); alert('Merci ! Inscription validée.');" class="space-y-4">
+                        <input type="email" placeholder="Email professionnel" class="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-primary outline-none transition-colors">
+                        <button class="w-full bg-white text-black font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">S'inscrire</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600">
+                <p>&copy; 2025 CloudyMagine. Bordeaux & Volda.</p>
+                <div class="flex gap-8">
+                    <button onclick="routeTo('privacy')" class="hover:text-gray-400 transition-colors">Confidentialité</button>
+                    <button onclick="routeTo('terms')" class="hover:text-gray-400 transition-colors">CGV</button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="chatbot-container" class="fixed bottom-10 right-10 z-[80]">
+        <div id="chat-window" class="hidden glass-panel w-80 h-[450px] rounded-3xl mb-4 flex flex-col transform translate-y-4 opacity-0 transition-all duration-300 shadow-2xl">
+            <div class="p-4 border-b border-white/10 bg-surface rounded-t-3xl flex justify-between items-center">
+                <h4 class="font-bold text-sm text-primary flex items-center gap-2"><span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-success"></span></span> CM Assistant</h4>
+                <button onclick="toggleChat()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-minus"></i></button>
+            </div>
+            <div id="chat-body" class="flex-1 p-3 overflow-y-auto space-y-3 text-sm">
+                <div class="flex justify-start">
+                    <div class="bg-white/10 p-3 rounded-r-xl rounded-bl-xl max-w-[80%]">Bonjour ! Je suis CM Assistant. Comment puis-je vous aider ? (Essayez 'agence', 'devis', ou 'menu').</div>
+                </div>
+            </div>
+            <div class="p-3 border-t border-white/10">
+                <div class="flex gap-2">
+                    <input type="text" id="chatbot-input" placeholder="Écrivez votre question..." class="flex-1 bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:border-primary outline-none" onkeypress="if(event.key === 'Enter') handleChatInput(true)">
+                    <button onclick="handleChatInput(true)" class="w-8 h-8 bg-primary rounded-xl hover:bg-primary/80 text-xs"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <button id="chat-toggle-btn" onclick="toggleChat()" class="w-14 h-14 bg-primary rounded-full text-xl text-white shadow-2xl shadow-primary/50 hover:scale-110 transition-transform duration-300 neon-glow">
             <i class="fa-regular fa-comments"></i>
         </button>
     </div>
 
-    <script>
-        /* --- 1. PARTICLE SYSTEM (PHYSICS) --- */
-        const canvas = document.getElementById('particle-canvas');
-        const ctx = canvas.getContext('2d');
-        let width, height;
-        let particles = [];
-        const mouse = { x: -1000, y: -1000 };
-
-        function initCanvas() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
-            particles = [];
-            // Créer 100 particules
-            for(let i=0; i<100; i++) {
-                particles.push({
-                    x: Math.random() * width,
-                    y: Math.random() * height,
-                    vx: (Math.random() - 0.5) * 0.5,
-                    vy: (Math.random() - 0.5) * 0.5,
-                    size: Math.random() * 2,
-                    alpha: Math.random() * 0.5 + 0.1
-                });
-            }
-        }
-
-        function animateCanvas() {
-            ctx.clearRect(0, 0, width, height);
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>   
+   <script>
+        // --- 1. INIT & TRANSITIONS ---
+        window.onload = function() {
+            // Intro Animation Logic
+            const loaderLiquid = document.getElementById('loader-liquid');
+            const loaderText = document.getElementById('loader-text');
+            const dropletsContainer = document.getElementById('droplets-container');
             
-            particles.forEach(p => {
-                // Mouvement de base
-                p.x += p.vx;
-                p.y += p.vy;
-
-                // Rebond bords
-                if(p.x < 0 || p.x > width) p.vx *= -1;
-                if(p.y < 0 || p.y > height) p.vy *= -1;
-
-                // Réaction souris (Repulsion)
-                const dx = mouse.x - p.x;
-                const dy = mouse.y - p.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                if(dist < 150) {
-                    const angle = Math.atan2(dy, dx);
-                    const force = (150 - dist) / 150;
-                    p.x -= Math.cos(angle) * force * 2;
-                    p.y -= Math.sin(angle) * force * 2;
+            function createDroplet() {
+                const drop = document.createElement('div');
+                drop.classList.add('droplet');
+                const angle = Math.random() * Math.PI * 2; const radius = 40 + Math.random() * 40;
+                drop.style.left = (window.innerWidth/2 + Math.cos(angle)*radius) + 'px';
+                drop.style.top = (window.innerHeight/2 + Math.sin(angle)*radius) + 'px';
+                drop.style.width = drop.style.height = (Math.random()*6+2)+'px';
+                drop.style.animation = `dropSplash ${Math.random()*1+0.5}s ease-in forwards`;
+                dropletsContainer.appendChild(drop);
+                setTimeout(() => drop.remove(), 1500);
+            }
+            let progress = 0; const dropInterval = setInterval(createDroplet, 100);
+            const interval = setInterval(() => {
+                progress += Math.random() * 5; if (progress > 100) progress = 100;
+                loaderLiquid.style.height = progress + '%'; loaderText.innerText = `Initialisation... ${Math.floor(progress)}%`;
+                if (progress === 100) {
+                    clearInterval(interval); clearInterval(dropInterval);
+                    setTimeout(() => {
+                        const curtain = document.getElementById('page-transition-curtain');
+                        curtain.classList.add('hidden-curtain');
+                        setTimeout(() => {
+                            document.getElementById('initial-loader-content').style.display = 'none';
+                            document.getElementById('loader-text').style.display = 'none';
+                            document.getElementById('droplets-container').style.display = 'none';
+                            document.getElementById('transition-logo-img').style.display = 'block';
+                            curtain.classList.add('nav-mode');
+                        }, 1000);
+                        AOS.init({ duration: 1000, once: true });
+                    }, 800);
                 }
+            }, 50);
 
-                // Dessin
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(206, 143, 255, ${p.alpha})`;
-                ctx.fill();
+            // Lancement des particules
+            initParticles();
+        };
 
-                // Lignes de connexion
-                particles.forEach(p2 => {
-                    const d = Math.sqrt((p.x - p2.x)**2 + (p.y - p2.y)**2);
-                    if(d < 100) {
-                        ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = `rgba(206, 143, 255, ${0.1 - (d/100)*0.1})`;
-                        ctx.stroke();
-                    }
-                });
-            });
-            requestAnimationFrame(animateCanvas);
+       // --- MENU MOBILE FONCTIONNEL ---
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu-overlay');
+            const body = document.body;
+            if (menu.classList.contains('pointer-events-none')) {
+                menu.classList.remove('pointer-events-none', 'opacity-0', 'scale-95');
+                menu.classList.add('opacity-100', 'scale-100');
+                body.style.overflow = 'hidden';
+            } else {
+                menu.classList.remove('opacity-100', 'scale-100');
+                menu.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                body.style.overflow = 'auto';
+            }
+        }
+        function toggleLoginModal() { document.getElementById('login-modal').classList.toggle('hidden'); document.getElementById('login-modal').classList.toggle('opacity-0'); }
+        
+        function loginClient() {
+            toggleLoginModal(); setTimeout(() => routeTo('dashboard'), 500);
         }
 
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        window.addEventListener('resize', initCanvas);
-        initCanvas();
-        animateCanvas();
-
-        /* --- 2. CUSTOM CURSOR & MAGNETIC --- */
-        const cursor = document.getElementById('cursor');
-        const cursorDot = document.getElementById('cursor-dot');
-        
-        window.addEventListener('mousemove', e => {
-            cursorDot.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-            // Léger délai pour le grand cercle (effet fluide)
+        function routeTo(pageId) {
+            const curtain = document.getElementById('page-transition-curtain');
+            const currentActive = document.querySelector('.page-section.active');
+            
+            if(currentActive) currentActive.classList.add('fading-out');
+            curtain.classList.remove('hidden-curtain'); curtain.classList.add('active');
+            
             setTimeout(() => {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            }, 50);
-        });
+                document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active', 'fading-out'));
+                document.getElementById('page-' + pageId).classList.add('active');
+                window.scrollTo(0, 0); AOS.refresh();
+                
+                setTimeout(() => { curtain.classList.remove('active'); curtain.classList.add('hidden-curtain'); }, 600);
+            }, 1200);
+        }
 
-        document.querySelectorAll('[data-magnet="true"]').forEach(el => {
-            el.addEventListener('mouseenter', () => document.body.classList.add('magnet-active'));
-            el.addEventListener('mouseleave', () => document.body.classList.remove('magnet-active'));
-            // Effet magnétique simple (déplace l'élément vers la souris)
-            el.addEventListener('mousemove', e => {
-                const rect = el.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width/2;
-                const y = e.clientY - rect.top - rect.height/2;
-                el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
-            });
-            el.addEventListener('mouseleave', () => {
-                el.style.transform = 'translate(0,0)';
-            });
-        });
-
-        /* --- 3. AUDIO ENGINE (Web Audio API) --- */
-        const audioEngine = {
-            ctx: null,
-            muted: true,
-            init() {
-                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-            },
-            playTone(freq = 400, type = 'sine', duration = 0.1) {
-                if(this.muted || !this.ctx) return;
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-                gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(this.ctx.destination);
-                osc.start();
-                osc.stop(this.ctx.currentTime + duration);
-            },
-            toggle() {
-                if(!this.ctx) this.init();
-                this.muted = !this.muted;
-                const btn = document.getElementById('audio-toggle');
-                if(!this.muted) {
-                    btn.innerHTML = '<i class="fa-solid fa-volume-high"></i>';
-                    btn.classList.add('text-primary', 'border-primary');
-                    this.playTone(600, 'sine', 0.3); // Son d'activation
-                } else {
-                    btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
-                    btn.classList.remove('text-primary', 'border-primary');
+        // --- 2. CHATBOT LOGIC ---
+        function toggleChat() {
+            const window = document.getElementById('chat-window');
+            window.classList.toggle('hidden');
+            setTimeout(() => {
+                window.classList.toggle('opacity-0');
+                window.classList.toggle('translate-y-4');
+                if (!window.classList.contains('hidden')) {
+                    document.getElementById('chatbot-input').focus();
+                    document.getElementById('chat-body').scrollTop = document.getElementById('chat-body').scrollHeight;
                 }
+            }, 10);
+        }
+
+        function addMessage(text, isUser = false) {
+            const chatBody = document.getElementById('chat-body');
+            const msgDiv = document.createElement('div');
+            msgDiv.classList.add('flex');
+            msgDiv.classList.add(isUser ? 'justify-end' : 'justify-start');
+
+            const contentDiv = document.createElement('div');
+            contentDiv.classList.add('p-3', 'rounded-xl', 'max-w-[80%]', 'break-words');
+            
+            if (isUser) {
+                contentDiv.classList.add('bg-primary/20', 'rounded-br-none');
+            } else {
+                contentDiv.classList.add('bg-white/10', 'rounded-bl-none');
+            }
+            
+            contentDiv.innerHTML = text;
+            msgDiv.appendChild(contentDiv);
+            chatBody.appendChild(msgDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function handleChatInput(clear = false) {
+            const inputField = document.getElementById('chatbot-input');
+            const userInput = inputField.value.trim();
+            if (userInput === "") return;
+            addMessage(userInput, true);
+            if (clear) inputField.value = "";
+
+            let response = "";
+            const lowerInput = userInput.toLowerCase();
+            if (lowerInput.includes('agence') || lowerInput.includes('cloudymagine')) {
+                response = "CloudyMagine est un accélérateur de réalité pour marques, spécialisé en Architecture de marques et Stratégie d'acquisition. <a onclick='routeTo(\"about\"); toggleChat();' class='text-primary underline cursor-pointer'>L'Agence</a>.";
+            } else if (lowerInput.includes('devis') || lowerInput.includes('prix')) {
+                response = "Utilisez notre calculateur interactif : <a onclick='routeTo(\"devis\"); toggleChat();' class='text-primary underline cursor-pointer'>Estimation</a>.";
+            } else {
+                response = "Je suis désolé, je n'ai pas compris. Essayez 'agence' ou 'devis'.";
+            }
+            setTimeout(() => addMessage(response, false), 500);
+        }
+
+        // --- 4. DEVIS CALCULATOR ---
+        const calcData = {
+            montage: {
+                title: "Post-Production",
+                desc: "Nous transformons vos rushs en récits captivants. Montage rythmé, colorimétrie cinéma et sound design immersif.",
+                opts: [
+                    {id: 'court', l:"Format Court (Reels/TikTok)", p:80, desc:"Montage dynamique < 60s, sous-titres inclus."},
+                    {id: 'long', l:"Format Long (YouTube)", p:250, desc:"Storytelling avancé, J-cuts, transitions fluides > 10min."},
+                    {id: 'pub', l:"Spot Publicitaire", p:500, desc:"Qualité Broadcast, Sound Design Pro, VFX légers."}
+                ],
+                adds: [
+                    {id: 'sub', l:"Sous-titres animés", p:50, desc:"Animation mot par mot style Hormozi."},
+                    {id: 'source', l:"Fichiers Sources", p:150, desc:"Livraison du projet .prproj ou .drp."},
+                    {id: '4k', l:"Export 4K Master", p:100, desc:"Encodage bitrate maximal pour diffusion."}
+                ]
+            },
+            branding: {
+                title: "Identité Visuelle",
+                desc: "Création de systèmes graphiques cohérents et mémorables pour élever la perception de votre marque.",
+                opts: [
+                    {id: 'logo', l:"Logo Starter", p:300, desc:"Logotype principal + Icône + Palette couleurs."},
+                    {id: 'full', l:"Identité Complète", p:800, desc:"Logo + Charte graphique + Typographie + Pattern."},
+                    {id: 'sys', l:"System Design", p:1500, desc:"Univers complet pour applications et web."}
+                ],
+                adds: [
+                    {id: 'social', l:"Social Media Kit", p:200, desc:"Templates Canva/Figma pour Instagram/LinkedIn."},
+                    {id: 'card', l:"Carte de Visite", p:100, desc:"Design prêt pour impression avec vernis sélectif."},
+                    {id: 'guide', l:"Brand Guidelines", p:250, desc:"PDF de 30 pages expliquant l'usage de la marque."}
+                ]
+            },
+            miniature: {
+                title: "Acquisition (CTR)",
+                desc: "Design scientifique basé sur la psychologie des couleurs et la composition pour maximiser le taux de clic.",
+                opts: [
+                    {id: 'pack1', l:"Pack 1 Miniature", p:50, desc:"Design haute qualité avec retouche photo."},
+                    {id: 'pack5', l:"Pack 5 Miniatures", p:200, desc:"Idéal pour une série de vidéos cohérentes."},
+                    {id: 'pack10', l:"Pack 10 Miniatures", p:350, desc:"Pour les créateurs réguliers (usage sur 3 mois)."}
+                ],
+                adds: [
+                    {id: 'psd', l:"Fichiers PSD", p:50, desc:"Calques organisés pour modifications futures."},
+                    {id: 'ab', l:"Déclinaison A/B", p:40, desc:"Une variante alternative pour tester le CTR."},
+                    {id: 'story', l:"Format Story", p:30, desc:"Adaptation verticale pour promotion."}
+                ]
             }
         };
+        
+        let curSel = { s: null, op: 0, add: 0, hist: [], histFull: [] };
 
-        // Sons sur les boutons
-        document.querySelectorAll('button').forEach(btn => {
-            btn.addEventListener('mouseenter', () => audioEngine.playTone(300, 'triangle', 0.05));
-            btn.addEventListener('click', () => audioEngine.playTone(600, 'sine', 0.1));
-        });
+        function showTooltip(key, type = 'service', obj = null) {
+            const panelContent = document.getElementById('help-content');
+            const panelDefault = document.getElementById('help-default');
+            const icon = document.getElementById('help-icon');
+            const title = document.getElementById('help-title');
+            const desc = document.getElementById('help-desc');
 
-        /* --- 4. ROUTER & TRANSITIONS --- */
-        const router = {
-            current: 'home',
-            go(pageId) {
-                if(this.current === pageId) return;
-                
-                // 1. Play Sound
-                audioEngine.playTone(200, 'square', 0.2);
+            panelDefault.classList.add('hidden');
+            panelContent.classList.remove('hidden', 'opacity-0');
+            
+            if (type === 'service') {
+                icon.innerHTML = '<i class="fa-solid fa-info-circle"></i>';
+                title.innerText = calcData[key].title;
+                desc.innerText = calcData[key].desc;
+            } else if (type === 'option' && obj) {
+                icon.innerHTML = '<i class="fa-solid fa-gear"></i>';
+                title.innerText = obj.l;
+                desc.innerText = obj.desc;
+            }
+        }
 
-                // 2. Transition Out
-                const currentEl = document.getElementById('page-' + this.current);
-                if(currentEl) {
-                    currentEl.classList.remove('visible');
-                    setTimeout(() => currentEl.classList.add('hidden'), 800);
-                }
+        function selectMainService(key, el, color) {
+            curSel.s = key; curSel.op = 0; curSel.add = 0; curSel.hist = []; curSel.histFull = [];
+            document.querySelectorAll('.srv-card').forEach(c => {
+                c.classList.remove('selected-primary', 'selected-secondary', 'selected-accent');
+                c.classList.remove(`border-${color}`, `bg-white/10`);
+                c.classList.add('border-white/10', 'bg-white/5');
+            });
+            el.classList.add(`selected-${color}`);
+            el.classList.remove('border-white/10', 'bg-white/5');
+            el.classList.add(`border-${color}`, 'bg-white/10');
 
-                // 3. Transition In
-                setTimeout(() => {
-                    const nextEl = document.getElementById('page-' + pageId);
-                    if(nextEl) {
-                        nextEl.classList.remove('hidden');
-                        // Force reflow
-                        void nextEl.offsetWidth;
-                        nextEl.classList.add('visible');
-                        window.scrollTo(0, 0);
+            const optsDiv = document.getElementById('inject-options'); optsDiv.innerHTML = '';
+            calcData[key].opts.forEach((o, i) => {
+                const checkedAttr = i === 0 ? 'checked' : '';
+                const baseColor = color === 'primary' ? 'primary' : 'secondary';
+                optsDiv.innerHTML += `<div onmouseenter="showTooltip('${key}', 'option', {l:'${o.l}', desc:'${o.desc}'})" class="relative p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 cursor-pointer transition flex items-center justify-between"><div><div class="font-bold text-sm text-gray-200">${o.l}</div><div class="text-xs text-gray-500 mt-1">${o.desc.substring(0,30)}...</div></div><div class="flex items-center gap-3"><span class="font-mono text-${baseColor} font-bold">${o.p}€</span><input type="radio" name="main_opt" value="${o.p}" data-label="${o.l}" ${checkedAttr} onchange="recalc()" class="accent-${baseColor} w-5 h-5"></div></div>`;
+            });
+
+            const addsDiv = document.getElementById('inject-addons'); addsDiv.innerHTML = '';
+            calcData[key].adds.forEach((a) => {
+                const baseColor = color === 'primary' ? 'primary' : 'secondary';
+                addsDiv.innerHTML += `<div onmouseenter="showTooltip('${key}', 'option', {l:'${a.l}', desc:'${a.desc}'})" class="relative p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 cursor-pointer transition flex items-center justify-between"><div class="text-sm font-medium text-gray-300">${a.l}</div><div class="flex items-center gap-3"><span class="font-mono text-gray-500">+${a.p}€</span><input type="checkbox" value="${a.p}" data-label="${a.l}" data-price="${a.p}" onchange="recalc()" class="accent-${baseColor} w-5 h-5 rounded"></div></div>`;
+            });
+
+            recalc(); setTimeout(() => switchView(2), 300);
+        }
+
+        function recalc() {
+            const main = document.querySelector('input[name="main_opt"]:checked');
+            curSel.hist = []; curSel.histFull = [];
+            if(main) {
+                curSel.op = parseInt(main.value);
+                curSel.hist.push(main.dataset.label);
+                curSel.histFull.push({ label: main.dataset.label, price: curSel.op + " €", type: "Principal" });
+            }
+            let adds = 0;
+            document.querySelectorAll('#inject-addons input:checked').forEach(i => {
+                const price = parseInt(i.value); adds += price;
+                curSel.hist.push(i.dataset.label);
+                curSel.histFull.push({ label: i.dataset.label, price: "+ " + price + " €", type: "Extension" });
+            });
+            curSel.add = adds;
+        }
+
+        function computeSummary() {
+            recalc(); const total = curSel.op + curSel.add;
+            document.getElementById('final-service-name').innerText = curSel.s ? calcData[curSel.s].title : "--";
+            document.getElementById('final-price').innerText = total + " €";
+            const list = document.getElementById('final-recap-list'); list.innerHTML = '';
+            curSel.hist.forEach(item => { list.innerHTML += `<div class="flex items-center gap-2"><i class="fa-solid fa-check text-primary text-xs"></i> ${item}</div>`; });
+        }
+
+        function switchView(n) {
+            document.querySelectorAll('.step-view').forEach(v => v.classList.add('hidden'));
+            document.getElementById('view-'+n).classList.remove('hidden');
+            [1,2,3].forEach(i => document.getElementById('step-text-'+i).className = n>=i ? "text-primary" : "text-gray-500");
+        }
+
+        // --- 4. FONCTION PDF AVANCÉE ---
+        async function submitFinal() {
+            const btn = document.querySelector('#view-3 button');
+            const email = document.getElementById('contact-email').value;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Génération PDF...';
+            
+            const { jsPDF } = window.jspdf; const doc = new jsPDF();
+            const date = new Date().toLocaleDateString('fr-FR'); const total = curSel.op + curSel.add;
+            
+            doc.setFillColor(3, 3, 4); doc.rect(0, 0, 210, 40, 'F');
+            doc.setTextColor(255, 255, 255); doc.setFontSize(22); doc.setFont("helvetica", "bold"); doc.text("CloudyMagine", 15, 25);
+            doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.text("Estimation de Projet", 150, 25);
+
+            doc.setTextColor(0, 0, 0); doc.text(`Date : ${date}`, 15, 55); doc.text(`Client : ${email || "Non renseigné"}`, 15, 62); doc.text(`Service : ${curSel.s ? calcData[curSel.s].title : "Non Défini"}`, 15, 69);
+            
+            const tableData = curSel.histFull.map(item => [item.label, item.type, item.price]);
+            doc.autoTable({ startY: 80, head: [['Description', 'Type', 'Prix (EUR)']], body: tableData, theme: 'grid', headStyles: { fillColor: [122, 59, 224] }, styles: { fontSize: 11, cellPadding: 3 } });
+
+            let finalY = doc.lastAutoTable.finalY + 15;
+            doc.setFontSize(14); doc.setFont("helvetica", "bold"); doc.text(`TOTAL ESTIMÉ : ${total} EUR`, 130, finalY);
+            doc.setFontSize(10); doc.setFont("helvetica", "normal"); doc.text("Délai estimatif de livraison : 5 à 10 jours ouvrés (à confirmer).", 15, finalY);
+
+            doc.setTextColor(150); doc.setFontSize(9);
+            doc.text(doc.splitTextToSize("CE DOCUMENT EST GÉNÉRÉ AUTOMATIQUEMENT À TITRE INFORMATIF UNIQUEMENT.", 180), 15, 260);
+            doc.setTextColor(122, 59, 224); doc.text("CloudyMagine Studio - Bordeaux & Volda", 105, 280, { align: 'center' });
+
+            doc.save(`CloudyMagine_Estimation_${Date.now()}.pdf`);
+            setTimeout(() => { alert(`Merci ! Le PDF a été téléchargé. Une copie a été envoyée à ${email}.`); routeTo('home'); btn.innerHTML = 'Envoyer & Télécharger'; }, 1500);
+        }
+
+        // --- 5. BACKGROUND PARTICLES (Corrigé et Amélioré) ---
+        function initParticles() {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const container = document.getElementById('canvas-container');
+            
+            if (container) {
+                container.innerHTML = ''; // Nettoie si déjà présent
+                container.appendChild(canvas);
+                let w, h, particles = [];
+                function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+                window.addEventListener('resize', resize); resize();
+                class Particle {
+                    constructor() { this.reset(); }
+                    reset() { 
+                        this.x = Math.random() * w; this.y = Math.random() * h; 
+                        this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3; 
+                        this.size = Math.random() * 3 + 1; // Plus gros
+                        this.alpha = Math.random() * 0.6 + 0.3; // Plus visible
                     }
-                    this.current = pageId;
-                    
-                    // Special init for Dashboard chart
-                    if(pageId === 'dashboard') initChart();
-                }, 800);
+                    update() { this.x += this.vx; this.y += this.vy; if(this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.reset(); }
+                    draw() { ctx.fillStyle = `rgba(122,59,224,${this.alpha})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+                }
+                for(let i=0; i<80; i++) particles.push(new Particle()); // Plus de particules
+                function loop() { ctx.clearRect(0, 0, w, h); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(loop); }
+                loop();
             }
-        };
+        }
 
-        /* --- 5. FORM ENGINE --- */
-        const formEngine = {
-            data: {},
-            select(key, value, nextStepId) {
-                this.data[key] = value;
-                this.transition(nextStepId);
-            },
-            back(prevStepId) {
-                this.transition(prevStepId);
-            },
-            transition(stepId) {
-                document.querySelectorAll('.form-step').forEach(el => el.classList.add('hidden'));
-                document.getElementById('form-step-' + stepId).classList.remove('hidden');
-                
-                // Update Progress Bar
-                const bar = document.getElementById('progress-bar');
-                if(stepId === 1) bar.style.width = '33%';
-                if(stepId === 2) bar.style.width = '66%';
-                if(stepId === 3) bar.style.width = '100%';
-            },
-            submit() {
-                const email = document.getElementById('user-email').value;
-                this.data.email = email;
-                
-                // Fake Generation PDF Logic
-                document.getElementById('form-step-3').classList.add('hidden');
-                document.getElementById('form-success').classList.remove('hidden');
-                
-                // Generate Real PDF
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF();
-                doc.setFillColor(3,3,4); doc.rect(0,0,210,297,'F'); // Fond noir
-                doc.setTextColor(255,255,255);
-                doc.setFontSize(22); doc.text("CloudyMagine // Estimation", 20, 20);
-                doc.setFontSize(12); doc.text(`Projet : ${this.data.type}`, 20, 40);
-                doc.text(`Budget : ${this.data.budget}`, 20, 50);
-                doc.text(`Client : ${this.data.email}`, 20, 60);
-                doc.save('CloudyMagine_Brief.pdf');
+// --- 5. FONCTION D'OUVERTURE DE PROJET ---
+        function openProject(index) {
+            const p = projectsData[index]; if(!p) return;
+            document.getElementById('detail-title').innerText = p.title;
+            document.getElementById('detail-cat').innerText = p.cat;
+            document.getElementById('detail-desc').innerText = p.desc;
+            document.getElementById('detail-concept').innerText = p.concept;
+            document.getElementById('detail-result').innerText = p.result;
+            for(let i = 0; i < 5; i++) {
+                const img = document.getElementById('img-' + (i + 1));
+                if(img) img.src = p.images[i] || '';
             }
-        };
+            routeTo('project-view');
+        }
 
-        /* --- 6. PROJECTS DATA & MODAL --- */
-        const projects = [
-            { title: "BMJ Prod", cat: "YouTube", desc: "Refonte de chaîne YouTube. Nous avons créé un système graphique qui permet de produire des miniatures à fort CTR en moins de 10 minutes.", imgs: ["images/BMJ/1.jpg", "images/BMJ/2.jpg", "images/BMJ/3.jpg"], services: ["Design", "Consulting"] },
-            { title: "Suko Drinks", cat: "Branding", desc: "Lancement d'une boisson. Création de l'univers 3D, packaging et site e-commerce Shopify Headless.", imgs: ["images/SUKO/1.jpg", "images/SUKO/2.jpg", "images/SUKO/3.jpg"], services: ["3D", "Web", "Ads"] },
-            { title: "CloudyMagine", cat: "Web", desc: "Notre propre plateforme. Une expérience immersive sans framework lourd, codée en Vanilla JS pour une performance maximale.", imgs: ["images/CM/1.jpg", "images/CM/2.jpg", "images/CM/3.jpg"], services: ["Dev", "UX"] },
-            { title: "TLPB", cat: "Merch", desc: "Collection Capsule. Design textile et shooting photo pour la tournée européenne.", imgs: ["images/TLPB/1.jpg", "images/TLPB/2.jpg", "images/TLPB/3.jpg"], services: ["Art Direction", "Photo"] }
+// --- 6. GESTION DES PROJETS ---
+        const projectsData = [
+            { title: "BMJ Production", cat: "Chaîne YouTube", desc: "Création de contenu vidéo dynamique et gestion d'une identité numérique forte.", concept: "Professionnaliser l'image de la chaîne tout en gardant l'authenticité.", result: "Une identité visuelle marquée qui a fidélisé une communauté active.", images: ["images/BMJ/1.jpg", "images/BMJ/2.jpg", "images/BMJ/3.jpg", "images/BMJ/4.jpg", "images/BMJ/5.jpg"] },
+            { title: "BMJ Esport", cat: "Identité Gaming", desc: "Développement complet de la marque pour une équipe compétitive.", concept: "Conception d'assets visuels agressifs et modernes.", result: "Une présence visuelle qui rivalise avec les structures professionnelles.", images: ["images/BMJ_Esport/1.jpg", "images/BMJ_Esport/2.jpg", "images/BMJ_Esport/3.jpg", "images/BMJ_Esport/4.jpg", "images/BMJ_Esport/5.jpg"] },
+            { title: "CloudyMagine", cat: "Agence 360°", desc: "Notre propre vitrine. L'architecture de marque de l'agence.", concept: "Refléter notre philosophie : 'L'Art de l'Invisible'.", result: "Une plateforme immersive qui convertit les visiteurs.", images: ["images/CM/1.jpg", "images/CM/2.jpg", "images/CM/3.jpg", "images/CM/4.jpg", "images/CM/5.jpg"] },
+            { title: "Transmission Inconnu", cat: "Court Métrage", desc: "Une production cinématographique narrative explorant le mystère.", concept: "Raconter une histoire complexe avec peu de dialogues.", result: "Une œuvre visuelle poignante qui démontre notre savoir-faire.", images: ["images/Court_Metrage/1.jpg", "images/Court_Metrage/2.jpg", "images/Court_Metrage/3.jpg", "images/Court_Metrage/4.jpg", "images/Court_Metrage/5.jpg"] },
+            { title: "Suko Drinks", cat: "Brand Identity", desc: "Lancement et packaging pour une nouvelle marque de boisson.", concept: "Créer un univers coloré et frais qui se démarque en rayon.", result: "Un branding impactant qui capture la soif de vivre.", images: ["images/SUKO/1.jpg", "images/SUKO/2.jpg", "images/SUKO/3.jpg", "images/SUKO/4.jpg", "images/SUKO/5.jpg"] },
+            { title: "The Lil Peter Band", cat: "Merch & Illustration", desc: "Design textile et illustrations pour le groupe de musique.", concept: "Fusionner l'univers musical avec un style Streetwear.", result: "Une collection sold-out et une identité visuelle forte.", images: ["images/TLPB/1.jpg", "images/TLPB/2.jpg", "images/TLPB/3.jpg", "images/TLPB/4.jpg", "images/TLPB/5.jpg"] }
         ];
 
-        function openModal(idx) {
-            const p = projects[idx];
-            document.getElementById('modal-title').innerText = p.title;
-            document.getElementById('modal-cat').innerText = p.cat;
-            document.getElementById('modal-desc').innerText = p.desc;
-            document.getElementById('modal-img-hero').src = p.imgs[0];
-            document.getElementById('modal-img-2').src = p.imgs[1] || p.imgs[0];
-            document.getElementById('modal-img-3').src = p.imgs[2] || p.imgs[0];
-            
-            const ul = document.getElementById('modal-services');
-            ul.innerHTML = '';
-            p.services.forEach(s => ul.innerHTML += `<li class='flex items-center gap-2'><span class='w-1 h-1 bg-primary rounded-full'></span>${s}</li>`);
-
-            const m = document.getElementById('modal-overlay');
-            m.classList.remove('hidden');
-            setTimeout(() => m.classList.remove('opacity-0'), 10);
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            const m = document.getElementById('modal-overlay');
-            m.classList.add('opacity-0');
-            setTimeout(() => {
-                m.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }, 500);
-        }
-
-        /* --- 7. INIT CHART (DASHBOARD) --- */
-        let chartInstance = null;
-        function initChart() {
-            if(chartInstance) return; // Déjà init
-            const ctx = document.getElementById('clientChart').getContext('2d');
-            // Gradient fill
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, 'rgba(206, 143, 255, 0.5)');
-            gradient.addColorStop(1, 'rgba(206, 143, 255, 0)');
-
-            chartInstance = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
-                    datasets: [{
-                        label: 'Visites',
-                        data: [120, 190, 300, 500, 200, 300, 450],
-                        borderColor: '#CE8FFF',
-                        backgroundColor: gradient,
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: { x: { display: false }, y: { display: false } }
+// --- 7. EFFET 3D TILT ---
+        function initTilt() {
+            const cards = document.querySelectorAll('.srv-card, .glass-panel, .work-item > div');
+            cards.forEach(card => {
+                card.classList.add('tilt-card');
+                if(!card.querySelector('.glare')) {
+                    const glare = document.createElement('div'); glare.classList.add('glare'); card.appendChild(glare);
+                    if(!card.classList.contains('relative')) card.classList.add('relative');
+                    if(!card.style.overflow) card.style.overflow = 'hidden'; 
                 }
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left; const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2; const centerY = rect.height / 2;
+                    const rotateX = ((y - centerY) / centerY) * -5; const rotateY = ((x - centerX) / centerX) * 5;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+                    const glare = card.querySelector('.glare');
+                    if(glare) { glare.style.opacity = '0.6'; glare.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.2), transparent 50%)`; }
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                    const glare = card.querySelector('.glare'); if(glare) glare.style.opacity = '0';
+                });
             });
         }
+        setTimeout(initTilt, 2000);
 
-        /* --- 8. BOOTSTRAP --- */
-        window.onload = function() {
-            // Fake Loading Sequence
-            const bar = document.getElementById('loader-bar');
-            const status = document.getElementById('loader-status');
-            
-            setTimeout(() => { bar.style.width = "40%"; status.innerText = "Chargement des Assets 3D..."; }, 500);
-            setTimeout(() => { bar.style.width = "80%"; status.innerText = "Connexion au Serveur Neural..."; }, 1200);
-            setTimeout(() => { 
-                bar.style.width = "100%"; 
-                document.getElementById('loader').style.transform = "translateY(-100%)";
-                document.getElementById('page-home').classList.add('visible');
+// --- GESTION DU CURSEUR PERSONNALISÉ ---
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+        const interactiveElements = document.querySelectorAll('a, button, input, textarea, .srv-card, .work-item, .glass-panel');
+        interactiveElements.forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hovered'));
+        });
+
+// --- GÉNÉRATEUR AUDIO ---
+        let audioCtx, oscillator, gainNode; let isPlaying = false;
+        function toggleAudio() {
+            const icon = document.getElementById('audio-icon'); const viz = document.getElementById('audio-viz'); const btn = document.getElementById('audio-btn');
+            if (!isPlaying) {
+                if (!audioCtx) { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+                oscillator = audioCtx.createOscillator(); gainNode = audioCtx.createGain();
+                oscillator.type = 'sine'; oscillator.frequency.setValueAtTime(110, audioCtx.currentTime);
                 
-                // Init animations texte
-                startTextScramble();
-            }, 2000);
-        };
+                const lfo = audioCtx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.2;
+                const lfoGain = audioCtx.createGain(); lfoGain.gain.value = 500;
+                lfo.connect(lfoGain); lfoGain.connect(oscillator.detune); lfo.start();
 
-        // Text Scramble Effect (Matrix style)
-        function startTextScramble() {
-            const els = document.querySelectorAll('.reveal-text');
-            els.forEach(el => {
-                // Simple reveal logic for now to keep code lighter
-                el.style.opacity = 0;
-                el.style.transform = "translateY(20px)";
-                setTimeout(() => {
-                    el.style.transition = "all 1s cubic-bezier(0.2, 1, 0.3, 1)";
-                    el.style.opacity = 1;
-                    el.style.transform = "translateY(0)";
-                }, el.dataset.delay * 1000);
-            });
+                oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
+                gainNode.gain.setValueAtTime(0, audioCtx.currentTime); gainNode.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 2);
+                oscillator.start(); isPlaying = true;
+                icon.className = "fa-solid fa-volume-high relative z-10 text-primary"; viz.classList.remove('opacity-0'); btn.classList.add('border-primary', 'shadow-[0_0_15px_rgba(122,59,224,0.4)]');
+            } else {
+                const currentTime = audioCtx.currentTime; gainNode.gain.setValueAtTime(gainNode.gain.value, currentTime); gainNode.gain.linearRampToValueAtTime(0, currentTime + 1);
+                setTimeout(() => { if(oscillator) oscillator.stop(); }, 1000);
+                isPlaying = false;
+                icon.className = "fa-solid fa-volume-xmark relative z-10"; viz.classList.add('opacity-0'); btn.classList.remove('border-primary', 'shadow-[0_0_15px_rgba(122,59,224,0.4)]');
+            }
         }
-
     </script>
 </body>
 </html>
