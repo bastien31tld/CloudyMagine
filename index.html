@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="CloudyMagine | Agence de communication digitale haute performance. Architecture de marques, Stratégie d'acquisition, Design systémique.">
     <meta name="author" content="Bastien & Pierre">
-    <title>CloudyMagine | L'Art de l'Invisible</title>
+    <title>CloudyMagine</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -413,7 +413,7 @@
             <div class="logo-ghost"></div>
             <div class="logo-liquid" id="loader-liquid"></div>
         </div>
-        <div class="loading-text" id="loader-text">Initialisation... 0%</div>
+        <div class="loading-text" id="loader-text">Bienvenue... 0%</div>
         <div id="droplets-container" class="absolute inset-0 pointer-events-none"></div>
         <img src="logo_icon.png" id="transition-logo-img" alt="Chargement">
     </div>
@@ -534,11 +534,11 @@
             <div class="max-w-5xl mx-auto px-6 relative z-10 text-center">
                 <i class="fa-solid fa-quote-left text-6xl text-white/5 mb-8 block"></i>
                 <h2 class="text-4xl md:text-6xl font-display font-medium leading-snug" data-aos="zoom-in" data-aos-duration="1500">
-                    "Dans un monde saturé de bruit, <span class="text-white bg-primary/20 px-2 italic">le silence du design parfait</span> est le bruit le plus fort que vous puissiez faire."
+                    "Le montage est l'art <span class="text-white bg-primary/20 px-2 italic">de raconter une histoire</span> dans la tête de l'autre."
                 </h2>
                 <div class="mt-12 flex items-center justify-center gap-4">
                     <div class="h-px w-12 bg-white/20"></div>
-                    <p class="font-mono text-primary uppercase tracking-widest text-sm">par CloudyMagine</p>
+                    <p class="font-mono text-primary uppercase tracking-widest text-sm">par David Mamet - Dramaturge et réalisateur</p>
                     <div class="h-px w-12 bg-white/20"></div>
                 </div>
             </div>
@@ -1368,7 +1368,7 @@
             if (progress > 100) progress = 100;
             
             if(liquid) liquid.style.height = progress + '%';
-            if(text) text.innerText = 'Initialisation... ' + Math.floor(progress) + '%';
+            if(text) text.innerText = 'Bienvenue... ' + Math.floor(progress) + '%';
 
             if (progress === 100) {
                 clearInterval(interval);
