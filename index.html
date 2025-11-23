@@ -97,14 +97,19 @@
     100% { transform: translate(-40%, -60%) scale(1.2) rotate(5deg); }
 }
 
-/* Animation pour l'image de la Home uniquement */
-@keyframes cosmic-breath-slow {
-    0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); }
-}
-.hero-bg-image {
-    animation: cosmic-breath-slow 25s infinite alternate ease-in-out;
+/* --- Z-SCROLL APPLE & HERO --- */
+.hero-section-container {
+    position: relative;
+    overflow: hidden; /* Empêche l'image de dépasser pendant le zoom */
+    perspective: 1000px; /* Active la 3D */
 }
 
+.hero-zoom-target {
+    /* Plus d'animation automatique ici, c'est le scroll qui gère */
+    transform-origin: center center;
+    will-change: transform, opacity;
+    transition: transform 0.1s linear; /* Lissage ultra-rapide */
+}
 
 /* --- PARTICULES (CANVAS) --- */
 #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; mix-blend-mode: screen; }
@@ -229,6 +234,148 @@
             body, a, button { cursor: auto !important; }
         }
 
+/* --- MARQUEE INFINI (LOGOS) --- */
+	.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(to right, #030304 0%, transparent 10%, transparent 90%, #030304 100%); /* Fondu sur les bords */
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); /* Masque pro */
+    padding: 40px 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+	.marquee-track {
+    display: flex;
+    gap: 4rem; /* Espace entre les logos */
+    width: max-content;
+    /* L'animation : 40s pour un tour complet, linéaire (vitesse constante) */
+    animation: scroll-left 40s linear infinite;
+}
+
+/* Pause au survol pour bien voir les logos */
+	.marquee-container:hover .marquee-track {
+		animation-play-state: paused;
+}
+
+@keyframes scroll-left {
+		0% { transform: translateX(0); }
+		100% { transform: translateX(-50%); } /* On déplace de la moitié (car le contenu est doublé) */
+}
+
+/* Style des Logos */
+.brand-item {
+    font-size: 3rem; /* Taille des icônes */
+    color: rgba(255, 255, 255, 0.3); /* Gris foncé par défaut */
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    cursor: pointer;
+}
+
+/* Effet "Holo" au survol */
+.brand-item:hover {
+    color: #fff;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    transform: scale(1.1);
+}
+
+/* Couleurs spécifiques au survol (Optionnel mais classe) */
+.brand-item:hover .fa-spotify { color: #1DB954; }
+.brand-item:hover .fa-google { color: #4285F4; }
+.brand-item:hover .fa-youtube { color: #FF0000; }
+.brand-item:hover .fa-twitch { color: #9146FF; }
+/* Pour les studios cinéma, on garde blanc ou une teinte dorée */
+.brand-item.studio:hover { color: #E490FF; }
+
+/* --- PORTFOLIO STICKY STACK (Premium Vertical) --- */
+.portfolio-stack-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-bottom: 20vh;
+}
+
+.stack-card {
+    position: sticky; /* C'est ça la magie : la carte "colle" */
+    top: 15vh; /* Elle se bloque à 15% du haut de l'écran */
+    height: 70vh; /* Hauteur de la carte */
+    margin-bottom: 15vh; /* Espace pour scroller vers la suivante */
+    
+    background: #050505;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 2.5rem;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5); /* Ombre vers le haut pour l'effet de pile */
+    transition: transform 0.3s ease;
+    
+    display: flex;
+    flex-direction: column; /* Mobile first */
+}
+
+/* Sur PC, on met image à droite, texte à gauche */
+@media (min-width: 1024px) {
+    .stack-card {
+        flex-direction: row;
+    }
+}
+
+.stack-card:hover {
+    transform: scale(0.98); /* Petit effet de clic tactile */
+    border-color: var(--primary-rgb);
+}
+
+.stack-content {
+    flex: 1;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+}
+
+.stack-img-container {
+    flex: 1.5;
+    position: relative;
+    overflow: hidden;
+}
+
+.stack-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.stack-card:hover .stack-img {
+    transform: scale(1.1) rotate(-1deg);
+}
+
+/* Layout Split pour la page Projet */
+.project-split-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4rem;
+}
+@media (min-width: 1024px) {
+    .project-split-layout {
+        grid-template-columns: 1fr 2fr; /* 1/3 Texte fixe, 2/3 Contenu scrollable */
+        align-items: start;
+    }
+}
+
+.project-sticky-side {
+    position: sticky;
+    top: 150px; /* Colle le texte explicatif quand on scrolle */
+}
+
     </style>
 </head>
 
@@ -322,9 +469,9 @@
 
 	<main id="page-home" class="page-section active">
         
-        <section class="relative min-h-screen flex flex-col justify-center items-center px-6 overflow-hidden">
-            
-            <div class="absolute inset-0 z-0 pointer-events-none hero-bg-image" style="background-image: url('image_2.png'); background-size: cover; background-position: center;"></div>
+        <section class="hero-section-container relative min-h-screen flex flex-col justify-center items-center px-6">
+    
+			<div class="hero-zoom-target absolute inset-0 z-0 pointer-events-none" style="background-image: url('image_2.png'); background-size: cover; background-position: center;"></div>
 
             <div class="absolute inset-0 bg-black/50 z-0 pointer-events-none"></div>
 
@@ -337,10 +484,10 @@
                     <span class="text-xs font-mono uppercase tracking-widest text-gray-300">Pierre et Bastien vous souhaite la bienvenue</span>
                 </div>
 
-                <h1 class="text-7xl md:text-[9rem] font-display font-bold leading-[0.85] tracking-tighter mb-10 drop-shadow-2xl">
-                    Faites que vos idées <br>
-                    <span class="text-liquid pb-4 block">Brillent plus fort.</span>
-                </h1>
+                <h1 class="hero-text-target text-7xl md:text-[9rem] font-display font-bold leading-[0.85] tracking-tighter mb-10 drop-shadow-2xl">
+				Faites que vos idées <br>
+				<span class="text-liquid pb-4 block">Brillent plus fort.</span>
+				</h1>
 
                 <p class="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-14 leading-relaxed font-light" data-aos="fade-up" data-aos-delay="100">
                     CloudyMagine n'est pas une agence. C'est un accélérateur de réalité pour marques ambitieuses. Nous transformons l'abstrait en empires digitaux.
@@ -379,16 +526,46 @@
             <div class="absolute -right-40 top-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-secondary/5 rounded-full blur-[150px]"></div>
         </section>
 
-        <section class="py-12 border-y border-white/5 overflow-hidden relative">
-            <div class="flex gap-24 animate-marquee whitespace-nowrap items-center opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-                <i class="fa-brands fa-aws text-5xl"></i><i class="fa-brands fa-google text-4xl"></i>
-                <i class="fa-brands fa-spotify text-5xl"></i><i class="fa-brands fa-apple text-5xl"></i>
-                <i class="fa-brands fa-stripe text-5xl"></i><i class="fa-brands fa-meta text-5xl"></i>
-                <i class="fa-brands fa-nike text-5xl"></i><i class="fa-brands fa-discord text-4xl"></i>
-                <i class="fa-brands fa-aws text-5xl"></i><i class="fa-brands fa-google text-4xl"></i>
-                <i class="fa-brands fa-spotify text-5xl"></i><i class="fa-brands fa-apple text-5xl"></i>
+        <section class="py-12 overflow-hidden relative bg-black/20">
+    <div class="marquee-container">
+        <div class="marquee-track">
+            
+            <div class="brand-item"><i class="fa-brands fa-spotify"></i></div>
+            <div class="brand-item"><i class="fa-brands fa-google"></i></div>
+            <div class="brand-item"><i class="fa-brands fa-youtube"></i></div>
+            <div class="brand-item"><i class="fa-brands fa-twitch"></i></div>
+            <div class="brand-item"><i class="fa-brands fa-apple"></i></div>
+            
+            <div class="brand-item studio">
+                <i class="fa-solid fa-mountain-sun text-2xl"></i> Paramount
             </div>
-        </section>
+            <div class="brand-item studio">
+                <i class="fa-solid fa-earth-americas text-2xl"></i> Universal
+            </div>
+            <div class="brand-item studio">
+                <i class="fa-solid fa-film text-2xl"></i> Gaumont
+            </div>
+
+
+            <div class="brand-item"><i class="fa-brands fa-spotify"></i></div>
+            <div class="brand-item"><i class="fa-brands fa-google"></i></div>
+            <div class="brand-item"><i class="fa-brands fa-youtube"></i></div>
+            <div class="brand-item"><i class="fa-brands fa-twitch"></i></div>
+            <div class="brand-item"><i class="fa-brands fa-apple"></i></div>
+            
+            <div class="brand-item studio">
+                <i class="fa-solid fa-mountain-sun text-2xl"></i> Paramount
+            </div>
+            <div class="brand-item studio">
+                <i class="fa-solid fa-earth-americas text-2xl"></i> Universal
+            </div>
+            <div class="brand-item studio">
+                <i class="fa-solid fa-film text-2xl"></i> Gaumont
+            </div>
+
+        </div>
+    </div>
+</section>
 
         <section class="py-32 px-6">
             <div class="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
@@ -537,152 +714,169 @@
     </main>
 
 <main id="page-portfolio" class="page-section pt-32 min-h-screen">
-        <div class="max-w-[1600px] mx-auto px-6 pb-40">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-20 border-b border-white/10 pb-10">
-                <div>
-                    <h1 class="text-6xl md:text-8xl font-display font-bold mb-4">Nos <span class="text-liquid">Œuvres</span></h1>
-                    <p class="text-xl text-gray-400 max-w-lg">Une curation de nos 6 projets majeurs.</p>
-                </div>
-                <div class="flex gap-4 mt-8 md:mt-0">
-                    <button class="px-6 py-2 rounded-full bg-white text-black font-bold transition hover:scale-105">Tout</button>
-                    <button class="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:text-white hover:border-white transition">Films</button>
-                    <button class="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:text-white hover:border-white transition">Identité</button>
+    <div class="max-w-[1400px] mx-auto px-6 mb-20 text-center">
+        <h1 class="text-6xl md:text-8xl font-display font-bold mb-6">
+            Sélection <span class="text-liquid">Officielle</span>
+        </h1>
+        <p class="text-xl text-gray-400">Une pile de nos meilleures créations.</p>
+    </div>
+
+    <div class="portfolio-stack-container px-4">
+
+        <article class="stack-card group" onclick="openProject(0)">
+            <div class="stack-content bg-gradient-to-br from-[#1a1a1a] to-black">
+                <span class="text-primary font-mono text-xs uppercase tracking-[0.3em] mb-4">01 / YouTube</span>
+                <h3 class="text-4xl md:text-6xl font-display font-bold mb-6 group-hover:text-white transition-colors">BMJ Prod</h3>
+                <p class="text-gray-400 text-lg leading-relaxed mb-8">Refonte complète de l'identité visuelle et stratégie de contenu.</p>
+                <div class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-white">
+                    <span>Voir le cas</span> <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform text-primary"></i>
                 </div>
             </div>
+            <div class="stack-img-container">
+                <img src="images/BMJ/1.jpg" class="stack-img" alt="Projet 1">
+            </div>
+        </article>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="works-grid">
-                
-                <div class="group work-item cursor-pointer" onclick="openProject(0)" data-aos="fade-up">
-                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
-                        <img src="images/BMJ/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="BMJ Chaine Youtube">
-                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-                        <div class="absolute bottom-6 left-6">
-                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">YouTube</span>
-                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-primary transition-colors">BMJ Prod</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group work-item cursor-pointer" onclick="openProject(1)" data-aos="fade-up" data-aos-delay="100">
-                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
-                        <img src="images/BMJ_Esport/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="BMJ Esport">
-                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-                        <div class="absolute bottom-6 left-6">
-                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Gaming</span>
-                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-secondary transition-colors">BMJ Esport</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group work-item cursor-pointer" onclick="openProject(2)" data-aos="fade-up" data-aos-delay="200">
-                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
-                        <img src="images/CM/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="CloudyMagine">
-                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-                        <div class="absolute bottom-6 left-6">
-                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Agence 360°</span>
-                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-accent transition-colors">CloudyMagine</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group work-item cursor-pointer" onclick="openProject(3)" data-aos="fade-up">
-                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
-                        <img src="images/Court_Metrage/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="Court Métrage">
-                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-                        <div class="absolute bottom-6 left-6">
-                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Cinéma</span>
-                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-primary transition-colors">Transmission Inconnu</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group work-item cursor-pointer" onclick="openProject(4)" data-aos="fade-up" data-aos-delay="100">
-                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
-                        <img src="images/SUKO/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="SUKO Boisson">
-                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-                        <div class="absolute bottom-6 left-6">
-                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Branding</span>
-                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-secondary transition-colors">Suko Drinks</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="group work-item cursor-pointer" onclick="openProject(5)" data-aos="fade-up" data-aos-delay="200">
-                    <div class="relative h-[400px] rounded-[2rem] overflow-hidden mb-4 border border-white/5">
-                        <img src="images/TLPB/1.jpg" class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110" alt="TLPB">
-                        <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
-                        <div class="absolute bottom-6 left-6">
-                            <span class="px-3 py-1 rounded-full border border-white/20 text-[10px] uppercase tracking-widest mb-2 inline-block backdrop-blur-md bg-black/30">Merch & Art</span>
-                            <h3 class="text-3xl font-display font-bold text-white group-hover:text-accent transition-colors">The Lil Peter Band</h3>
-                        </div>
-                    </div>
+        <article class="stack-card group" onclick="openProject(1)" style="top: 18vh;"> <div class="stack-content bg-gradient-to-br from-[#1a1a1a] to-black">
+                <span class="text-secondary font-mono text-xs uppercase tracking-[0.3em] mb-4">02 / Gaming</span>
+                <h3 class="text-4xl md:text-6xl font-display font-bold mb-6 group-hover:text-white transition-colors">BMJ Esport</h3>
+                <p class="text-gray-400 text-lg leading-relaxed mb-8">Couverture événementielle et direction artistique live.</p>
+                <div class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-white">
+                    <span>Voir le cas</span> <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform text-secondary"></i>
                 </div>
             </div>
-        </div>
-    </main>
+            <div class="stack-img-container">
+                <img src="images/BMJ_Esport/1.jpg" class="stack-img" alt="Projet 2">
+            </div>
+        </article>
 
-<main id="page-project-view" class="page-section pt-24 min-h-screen overflow-x-hidden">
+        <article class="stack-card group" onclick="openProject(2)" style="top: 21vh;">
+            <div class="stack-content bg-gradient-to-br from-[#1a1a1a] to-black">
+                <span class="text-accent font-mono text-xs uppercase tracking-[0.3em] mb-4">03 / Branding</span>
+                <h3 class="text-4xl md:text-6xl font-display font-bold mb-6 group-hover:text-white transition-colors">CloudyMagine</h3>
+                <p class="text-gray-400 text-lg leading-relaxed mb-8">L'architecture de notre propre marque.</p>
+                <div class="flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-white">
+                    <span>Voir le cas</span> <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition-transform text-accent"></i>
+                </div>
+            </div>
+            <div class="stack-img-container">
+                <img src="images/CM/1.jpg" class="stack-img" alt="Projet 3">
+            </div>
+        </article>
         
-        <div class="max-w-4xl mx-auto px-6 text-center relative z-10 mb-12">
-             <div class="absolute left-6 top-0 hidden md:block">
-                 <button onclick="routeTo('portfolio')" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition group">
-                    <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
-                </button>
-            </div>
-            <button onclick="routeTo('portfolio')" class="md:hidden mb-8 flex items-center gap-2 text-gray-400"><i class="fa-solid fa-arrow-left"></i> Retour</button>
-
-            <span id="detail-cat" class="text-primary font-mono text-sm uppercase tracking-[0.3em] mb-6 inline-block neon-glow">Catégorie</span>
-            <h1 id="detail-title" class="text-5xl md:text-8xl font-display font-bold mb-8 drop-shadow-2xl">Titre du Projet</h1>
-            <p id="detail-desc" class="text-xl md:text-2xl text-gray-300 leading-relaxed font-light">Description...</p>
         </div>
+</main>
 
-        <div class="w-full h-[70vh] relative mb-24 overflow-hidden group">
-            <div class="absolute inset-0 bg-gradient-to-t from-dark via-transparent to-dark z-10 pointer-events-none"></div>
-            <img id="img-1" src="" class="w-full h-full object-cover object-center transition duration-[2s] group-hover:scale-105">
+<main id="page-project-view" class="page-section min-h-screen bg-black z-50">
+    
+    <button onclick="routeTo('portfolio')" class="fixed top-28 left-8 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-black transition-all group border border-white/5">
+        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+    </button>
+
+    <div class="w-full h-[50vh] relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10"></div>
+        <img src="images/BMJ/1.jpg" class="w-full h-full object-cover object-center">
+        
+        <div class="absolute bottom-10 left-6 z-20 md:left-20">
+            <span class="text-primary font-mono text-sm uppercase tracking-[0.3em] mb-2 block">Branding & Stratégie</span>
+            <h1 class="text-6xl md:text-8xl font-display font-bold leading-none">BMJ Prod</h1>
         </div>
+    </div>
 
-
-        <div class="max-w-[1400px] mx-auto px-6 pb-32">
+    <div class="max-w-[1600px] mx-auto px-6 py-20">
+        
+        <div class="project-split-layout">
             
-            <div class="flex flex-col md:flex-row items-center gap-16 mb-32 relative">
-                <div class="w-full md:w-3/5 h-[600px] rounded-[3rem] overflow-hidden border border-white/5 relative group relative z-10">
-                     <img id="img-2" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+            <div class="project-sticky-side mb-16 lg:mb-0 hidden lg:block">
+                <h3 class="text-2xl font-bold text-white mb-6">La Genèse</h3>
+                <p class="text-gray-400 text-lg leading-relaxed mb-8 max-w-sm">
+                    L'objectif était de créer une rupture visuelle. Nous avons déconstruit les codes classiques pour rebâtir une identité forte, basée sur la performance et l'émotion.
+                </p>
+                
+                <div class="space-y-4 text-sm font-mono text-gray-500 border-l border-white/10 pl-6">
+                    <div><span class="text-white block">Client</span> BMJ Group</div>
+                    <div><span class="text-white block">Année</span> 2024</div>
+                    <div><span class="text-white block">Services</span> DA, Web, Print</div>
                 </div>
-                 <div class="w-full md:w-2/5 relative z-20 md:-ml-20 mt-10 md:mt-0">
-                    <div class="glass-panel p-10 rounded-[2rem] backdrop-blur-xl border-white/10 shadow-2xl">
-                        <h3 class="text-3xl font-display font-bold mb-4">Le Concept</h3>
-                        <p id="detail-concept" class="text-gray-400 text-lg leading-relaxed">
-                            </p>
+            </div>
+
+            <div class="space-y-32"> <section>
+                    <div class="flex items-center gap-4 mb-8">
+                        <span class="text-primary font-mono text-xl">01.</span>
+                        <h4 class="text-3xl font-display font-bold">Construction</h4>
                     </div>
-                </div>
-                <div class="absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[120px] -z-10"></div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-32">
-                <div class="h-[500px] md:h-[700px] rounded-[3rem] overflow-hidden border border-white/5 relative group md:mt-20">
-                     <img id="img-3" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-                </div>
-                <div class="h-[500px] md:h-[700px] rounded-[3rem] overflow-hidden border border-white/5 relative group">
-                     <img id="img-4" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-                </div>
-            </div>
-
-            <div class="flex flex-col md:flex-row-reverse items-center gap-16 mb-32 relative">
-                <div class="w-full md:w-3/5 h-[600px] rounded-[3rem] overflow-hidden border border-white/5 relative group z-10">
-                     <img id="img-5" src="" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
-                </div>
-                 <div class="w-full md:w-2/5 relative z-20 md:-mr-20 mt-10 md:mt-0 text-right">
-                    <div class="glass-panel p-10 rounded-[2rem] backdrop-blur-xl border-white/10 shadow-2xl">
-                        <h3 class="text-3xl font-display font-bold mb-4 text-secondary">Le Résultat</h3>
-                        <p id="detail-result" class="text-gray-400 text-lg leading-relaxed">
-                             </p>
+                    <div class="bg-white/5 p-10 rounded-[2rem] border border-white/10">
+                         <img src="images/BMJ/1.jpg" class="w-full h-auto opacity-80 hover:opacity-100 transition duration-500 grayscale hover:grayscale-0">
                     </div>
-                </div>
-                 <div class="absolute top-1/2 left-0 -translate-y-1/2 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[120px] -z-10"></div>
-            </div>
+                    <p class="mt-4 text-gray-400 text-sm">Utilisation du Nombre d'Or pour l'équilibre des formes géométriques.</p>
+                </section>
 
+                <section>
+                    <div class="flex items-center gap-4 mb-8">
+                        <span class="text-secondary font-mono text-xl">02.</span>
+                        <h4 class="text-3xl font-display font-bold">Palette Chromatique</h4>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="h-40 rounded-2xl bg-[#7A3BE0] flex items-end p-4 group relative overflow-hidden">
+                            <span class="font-mono text-white text-xs relative z-10">#7A3BE0<br>Primary Purple</span>
+                            <div class="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                        <div class="h-40 rounded-2xl bg-[#E490FF] flex items-end p-4 group relative overflow-hidden">
+                            <span class="font-mono text-black text-xs relative z-10">#E490FF<br>Soft Lilac</span>
+                        </div>
+                        <div class="h-40 rounded-2xl bg-[#030304] border border-white/20 flex items-end p-4 group relative overflow-hidden">
+                            <span class="font-mono text-white text-xs relative z-10">#030304<br>Deep Black</span>
+                        </div>
+                         <div class="h-40 rounded-2xl bg-gradient-to-br from-[#7A3BE0] to-[#E490FF] flex items-end p-4 group relative overflow-hidden">
+                            <span class="font-mono text-white text-xs relative z-10">Gradient<br>Flux</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="flex items-center gap-4 mb-8">
+                        <span class="text-accent font-mono text-xl">03.</span>
+                        <h4 class="text-3xl font-display font-bold">Typographie</h4>
+                    </div>
+                    <div class="bg-white p-10 rounded-[2rem] text-black">
+                        <h2 class="text-6xl font-display font-bold mb-2">Outfit Display</h2>
+                        <p class="text-xl mb-8">Aa Bb Cc Dd Ee Ff Gg Hh</p>
+                        <div class="h-px bg-black/10 w-full mb-8"></div>
+                        <p class="font-mono text-sm uppercase tracking-widest mb-2 text-gray-500">Font Secondaire</p>
+                        <p class="font-mono text-2xl">Space Grotesk Mono</p>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="flex items-center gap-4 mb-8">
+                        <span class="text-white font-mono text-xl">04.</span>
+                        <h4 class="text-3xl font-display font-bold">Identité Globale</h4>
+                    </div>
+                    <div class="space-y-8">
+                        <div class="rounded-[2rem] overflow-hidden border border-white/10 relative group">
+                            <img src="images/BMJ_Esport/1.jpg" class="w-full h-auto object-cover transition duration-700 group-hover:scale-105">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="rounded-[2rem] overflow-hidden border border-white/10 relative group">
+                                <img src="images/CM/1.jpg" class="w-full h-[400px] object-cover transition duration-700 group-hover:scale-105">
+                            </div>
+                            <div class="rounded-[2rem] overflow-hidden border border-white/10 relative group">
+                                <img src="images/SUKO/1.jpg" class="w-full h-[400px] object-cover transition duration-700 group-hover:scale-105">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
         </div>
-    </main>
+
+        <div class="mt-32 text-center border-t border-white/10 pt-20">
+            <h3 class="text-2xl font-bold mb-6">Projet Suivant</h3>
+            <button onclick="routeTo('portfolio')" class="px-10 py-4 border border-white/20 rounded-full font-bold hover:bg-white hover:text-black transition-all">Retour au Portfolio</button>
+        </div>
+
+    </div>
+</main>
 
     <main id="page-devis" class="page-section pt-32 min-h-screen">
         <div class="max-w-[1600px] mx-auto px-6 pb-40 flex flex-col lg:flex-row gap-12">
@@ -966,10 +1160,12 @@
                     setTimeout(() => {
                         curtain.classList.add('hidden-curtain');
                         curtain.classList.remove('active');
-                        // Lancer les effets d'arrière-plan
+                        // Lancer les effets d'arrière-plan & Premium
                         initParticles();
                         initCalendars();
                         initTilt();
+                        initAppleScroll(); // <-- AJOUT
+                        initCounters();    // <-- AJOUT
                     }, 1500);
                 }, 500);
             }
@@ -1307,18 +1503,38 @@
 
     // --- 8. DETAILS VISUELS (TILT & CURSOR) ---
     function initTilt() {
-        const cards = document.querySelectorAll('.tilt-card, .srv-card, .glass-panel');
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; const y = e.clientY - rect.top;
-                card.style.transform = `perspective(1000px) rotateX(${((y - rect.height/2)/20)*-1}deg) rotateY(${((x - rect.width/2)/20)}deg)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                card.style.transform = 'none';
-            });
+    // On cible les cartes, mais aussi les panneaux verre
+    const cards = document.querySelectorAll('.tilt-card, .srv-card, .glass-panel');
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            // --- NOUVEAU : Si la carte est "verrouillée" (sélectionnée), on arrête tout ---
+            if (card.classList.contains('locked-card')) {
+                card.style.transform = 'scale(1.02)'; // On la garde juste un peu grossie, mais plate
+                return; 
+            }
+
+            const rect = card.getBoundingClientRect();
+            // Calcul de la position de la souris relative à la carte
+            const x = e.clientX - rect.left; 
+            const y = e.clientY - rect.top;
+            
+            // Calcul des angles (divisé par 20 pour adoucir l'effet)
+            const xRotate = ((y - rect.height/2) / 20) * -1;
+            const yRotate = ((x - rect.width/2) / 20);
+            
+            // Application de la 3D
+            card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg) scale(1.02)`;
         });
-    }
+
+        card.addEventListener('mouseleave', () => {
+            // Quand on sort, on remet à plat (sauf si verrouillée, on laisse gérer par le clic)
+            if (!card.classList.contains('locked-card')) {
+                card.style.transform = 'none';
+            }
+        });
+    });
+}
 
     // Gestion Curseur
     const cursor = document.getElementById('custom-cursor');
@@ -1351,8 +1567,105 @@
         inp.value = '';
     }
     function toggleAudio() { alert("Audio activé (simulation)"); }
-    function openProject(i) { alert("Détails du projet " + (i+1)); routeTo('project-view'); }
 
+// --- GESTION PROJET ---
+function openProject(i) {
+    // Plus d'alert() ici !
+    
+    // Ici, plus tard, on pourra ajouter du code pour charger 
+    // les textes et images spécifiques au projet 'i'.
+    // Pour l'instant, on ouvre juste la page modèle.
+    
+    routeTo('project-view'); 
+}
+	
+// --- 9. EFFETS PREMIUM (APPLE SCROLL & COMPTEURS) ---
+
+    // Effet Z-Scroll (Zoom au défilement)
+    // Remplace l'ancienne fonction initAppleScroll() par celle-ci :
+
+	function initAppleScroll() {
+    const heroImage = document.querySelector('.hero-zoom-target');
+    const heroText = document.querySelector('.hero-text-target'); // Cible le texte
+    const heroSection = document.querySelector('.hero-section-container');
+    
+    if (!heroImage || !heroSection) return;
+
+    window.addEventListener('scroll', () => {
+        // Optimisation : On ne calcule rien si on n'est pas sur la Home
+        if(document.getElementById('page-home').style.display === 'none') return;
+
+        const scrollPosition = window.scrollY;
+        const windowHeight = window.innerHeight;
+        
+        if (scrollPosition > windowHeight) return;
+
+        // --- 1. Animation IMAGE (Fond) ---
+        // Zoom lent (1.5x max)
+        const bgScale = 1 + (scrollPosition * 0.0005); 
+        heroImage.style.transform = `scale(${bgScale})`;
+
+        // --- 2. Animation TEXTE (Premier Plan) ---
+        if(heroText) {
+            // Le texte zoome BEAUCOUP plus vite pour simuler la proximité (3D)
+            const textScale = 1 + (scrollPosition * 0.0002); 
+            
+            // Le texte devient flou en s'approchant (Cinematic Blur)
+            const blurValue = Math.min(scrollPosition * 0.02, 10); // Max 10px de flou
+            
+            // Le texte s'estompe rapidement pour ne pas gêner la suite
+            const textOpacity = 1 - (scrollPosition / (windowHeight * 0.6));
+
+            // On applique aussi un translate Y négatif pour contrer le scroll naturel
+            // Cela donne l'impression que le texte flotte au milieu pendant qu'on avance
+            const translateY = scrollPosition * 0.5; 
+
+            heroText.style.transform = `scale(${textScale}) translateY(${translateY}px)`;
+            heroText.style.filter = `blur(${blurValue}px)`;
+            heroText.style.opacity = Math.max(0, textOpacity);
+        }
+    });
+}
+
+    // Compteurs Dynamiques (0 à 2M+)
+    function initCounters() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    // Eviter de relancer si déjà fait
+                    if(el.dataset.animated) return;
+                    
+                    const rawText = el.innerText; // ex: "2M+"
+                    const target = parseFloat(rawText.replace(/[^0-9.]/g, '')); // ex: 2
+                    const suffix = rawText.replace(/[0-9.]/g, ''); // ex: "M+"
+                    
+                    let current = 0;
+                    const duration = 2000; // 2 secondes
+                    const stepTime = 20;
+                    const increment = target / (duration / stepTime);
+                    
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            el.innerText = target + suffix;
+                            el.dataset.animated = "true";
+                            clearInterval(timer);
+                        } else {
+                            // Gestion des entiers ou décimales
+                            let val = Number.isInteger(target) ? Math.ceil(current) : current.toFixed(1);
+                            el.innerText = val + suffix;
+                        }
+                    }, stepTime);
+                    
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 }); // Déclenche quand 50% visible
+
+        // On cible les gros chiffres de la section stats
+        document.querySelectorAll('#page-home .text-5xl').forEach(el => observer.observe(el));
+    }
 </script>
 </body>
 </html>
