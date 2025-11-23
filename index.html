@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="CloudyMagine | Agence de communication digitale haute performance. Architecture de marques, Stratégie d'acquisition, Design systémique.">
+    <meta name="description" content="CloudyMagine | Agence de communication digitale haute performance. Architecture de marques, Création de site WEB, Design systémique.">
     <meta name="author" content="Bastien & Pierre">
     <title>CloudyMagine</title>
     
@@ -15,6 +15,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;800&family=Outfit:wght@300;500;700;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
         tailwind.config = {
@@ -394,6 +399,81 @@
             transform-style: preserve-3d;
             will-change: transform;
         }
+		
+/* Bloquer agenda */
+.lock-tilt-on-hover {
+    transition: transform 0.3s ease;
+}
+.lock-tilt-on-hover:hover {
+    transform: none !important;
+}
+
+/* --- FLATPCIKR : Style "Soft Glass" et Glow --- */
+
+/* Conteneur principal du calendrier/roue d'heure */
+.flatpickr-calendar {
+    background: rgba(0, 0, 0, 0.8) !important; /* Rendre plus transparent */
+    border: 1px solid rgba(206, 143, 255, 0.3) !important; /* Bordure plus lumineuse (Primary/Glass) */
+    box-shadow: 0 0 20px rgba(122, 59, 224, 0.3), 0 5px 15px rgba(0, 0, 0, 0.8) !important; /* Glow violet/bleu */
+    border-radius: 1.5rem !important; /* Angles très arrondis */
+    padding: 10px;
+    z-index: 99999; /* S'assurer qu'il est au-dessus de tout */
+    backdrop-filter: blur(10px);
+}
+
+/* Header (Mois/Année) */
+.flatpickr-months,
+.flatpickr-weekdaycontainer {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    color: #E490FF !important; /* Flèches en couleur secondaire */
+}
+
+/* Jours du mois */
+.flatpickr-day {
+    color: #f0f0f0 !important;
+    border-radius: 50% !important; /* Jours en cercles parfaits */
+    transition: background-color 0.2s, color 0.2s;
+}
+
+/* Jour au survol */
+.flatpickr-day:hover:not(.disabled):not(.selected) {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #CE8FFF !important; /* Texte primaire */
+}
+
+/* Jour sélectionné */
+.flatpickr-day.selected,
+.flatpickr-day.selected:hover {
+    background: linear-gradient(45deg, #7A3BE0, #CE8FFF) !important;
+    border-color: #7A3BE0 !important;
+    color: #fff !important;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(122, 59, 224, 0.8); /* Glow plus fort sur le jour actif */
+}
+
+/* --- Roue de l'heure (Time Picker) --- */
+.flatpickr-time {
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Boutons heures/minutes */
+.flatpickr-hour, 
+.flatpickr-minute,
+.flatpickr-am-pm {
+    background: #050508 !important; 
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #00F0FF !important; /* Couleur Accent */
+    border-radius: 0.5rem;
+    font-size: 1.3rem;
+    padding: 4px;
+}
+.flatpickr-time input.flatpickr-minute:hover,
+.flatpickr-time input.flatpickr-hour:hover {
+    background: #1a1a2e !important;
+}
 
     </style>
 </head>
@@ -653,7 +733,7 @@
 
     <main id="page-about" class="page-section pt-32 min-h-screen" style="display: none;">
     <div class="max-w-[1600px] mx-auto px-6 pb-40">
-        
+	    
         <section class="mb-24" data-aos="fade-up" data-aos-duration="1000">
             <h1 class="font-display text-7xl lg:text-8xl font-black mb-4 text-liquid">
                 L'Art de l'Invisible.
@@ -758,19 +838,19 @@
             <div class="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto">
                 
                 <div class="glass-panel p-8 rounded-3xl flex flex-col md:flex-row items-center gap-6" data-aos="zoom-in-up">
-                    <img src="placeholder-man.jpg" alt="Photo d'expert" class="w-32 h-32 rounded-full object-cover border-4 border-primary/50" loading="lazy">
+                    <img src="images/Portraits Photo/bastien.jpg" alt="Photo d'expert" class="w-64 h-64 rounded-full object-cover border-4 border-primary/50" loading="lazy">
                     <div>
-                        <h3 class="font-display text-2xl font-bold text-white mb-1">Bastien D.</h3>
-                        <p class="text-sm text-primary uppercase font-mono mb-3">Architecte Systémique & CTO</p>
+                        <h3 class="font-display text-2xl font-bold text-white mb-1">Bastien A.</h3>
+                        <p class="text-sm text-primary uppercase font-mono mb-3">Responsable Communication & VFX</p>
                         <p class="text-gray-400 text-sm">Spécialiste en développement sur-mesure et intégration d'API complexes. Le cerveau derrière la performance technique.</p>
                     </div>
                 </div>
                 
                 <div class="glass-panel p-8 rounded-3xl flex flex-col md:flex-row items-center gap-6" data-aos="zoom-in-up" data-aos-delay="200">
-                    <img src="placeholder-woman.jpg" alt="Photo d'expert" class="w-32 h-32 rounded-full object-cover border-4 border-primary/50" loading="lazy">
+                    <img src="images/Portraits Photo/pierre.jpg" alt="Photo d'expert" class="w-64 h-64 rounded-full object-cover border-4 border-primary/50" loading="lazy">
                     <div>
-                        <h3 class="font-display text-2xl font-bold text-white mb-1">Pierre V.</h3>
-                        <p class="text-sm text-primary uppercase font-mono mb-3">Directeur Créatif & CMO</p>
+                        <h3 class="font-display text-2xl font-bold text-white mb-1">Pierre C.</h3>
+                        <p class="text-sm text-primary uppercase font-mono mb-3">Responsable Créatif & Marque</p>
                         <p class="text-gray-400 text-sm">Maître de la psychologie de la marque et du storytelling visuel. Transforme les concepts en expériences mémorables.</p>
                     </div>
                 </div>
@@ -795,61 +875,69 @@
 </main>
 
     <main id="page-contact" class="page-section pt-32 min-h-screen">
-        <div class="max-w-5xl mx-auto px-6 pb-40">
-            <div class="text-center mb-20">
-                <h1 class="text-6xl font-display font-bold mb-4">Parlons <span class="text-liquid">Futur</span></h1>
-                <p class="text-gray-400">Réservez un créneau directement dans notre agenda.</p>
-            </div>
+    <div class="max-w-5xl mx-auto px-6 pb-40">
+        <div class="text-center mb-20">
+            <h1 class="text-6xl font-display font-bold mb-4">Parlons <span class="text-liquid">Futur</span></h1>
+            <p class="text-gray-400">Réservez un créneau directement dans notre agenda.</p>
+        </div>
+        
+        <div class="glass-panel p-12 rounded-[3rem] border border-white/10 relative overflow-hidden">
             
-            <div class="glass-panel p-12 rounded-[3rem] border border-white/10 relative overflow-hidden">
-                <form id="agenda-form" onsubmit="event.preventDefault(); bookAppointment();" class="space-y-8 relative z-10">
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="space-y-6">
-                            <h3 class="text-xl font-bold text-primary mb-4"><i class="fa-solid fa-user mr-2"></i> Vos Coordonnées</h3>
-                            <div>
-                                <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Nom Complet</label>
-                                <input type="text" id="rdv-name" required class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none transition-colors">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Email</label>
-                                <input type="email" id="rdv-email" required class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none transition-colors">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Sujet du RDV</label>
-                                <select id="rdv-subject" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none cursor-pointer">
-                                    <option>Premier Contact</option>
-                                    <option>Point Projet en cours</option>
-                                    <option>Partenariat</option>
-                                </select>
-                            </div>
-                        </div>
+            <form id="agenda-form" onsubmit="event.preventDefault(); bookAppointment();" class="space-y-8 relative z-10">
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="flex items-center gap-4">
+                        <h3 class="text-xl font-bold text-primary"><i class="fa-solid fa-user mr-2"></i> Vos Coordonnées</h3>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <h3 class="text-xl font-bold text-secondary"><i class="fa-solid fa-calendar mr-2"></i> Date & Heure</h3>
+                    </div>
+                </div>
 
-                        <div class="space-y-6">
-                            <h3 class="text-xl font-bold text-secondary mb-4"><i class="fa-solid fa-calendar mr-2"></i> Date & Heure</h3>
-                            <div>
-                                <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Date souhaitée</label>
-                                <input type="text" id="datepicker" required placeholder="Sélectionner une date" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-secondary outline-none cursor-pointer">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Heure (8h - 20h)</label>
-                                <input type="text" id="timepicker" required placeholder="Sélectionner une heure" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-secondary outline-none cursor-pointer">
-                            </div>
-                            <div class="p-4 bg-white/5 rounded-xl border border-white/5 text-sm text-gray-400">
-                                <i class="fa-solid fa-circle-info text-secondary mr-2"></i> Un PDF de confirmation sera généré et une notification envoyée par mail.
-                            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Nom Complet</label>
+                            <input type="text" id="rdv-name" required class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Email</label>
+                            <input type="email" id="rdv-email" required class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none transition-colors">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Sujet du RDV</label>
+                            <select id="rdv-subject" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-primary outline-none cursor-pointer">
+                                <option>Premier Contact</option>
+                                <option>Point Projet en cours</option>
+                                <option>Partenariat</option>
+                            </select>
                         </div>
                     </div>
 
-                    <button type="submit" id="btn-agenda" class="w-full py-5 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(122,59,224,0.4)] transition-all transform hover:scale-[1.01]">
-                        Confirmer le Rendez-vous
-                    </button>
-                </form>
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Date souhaitée</label>
+                            <input type="text" id="datepicker" required placeholder="Sélectionner une date" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-secondary outline-none cursor-pointer">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold uppercase text-gray-500 mb-2">Heure (8h - 20h)</label>
+                            <input type="text" id="timepicker" required placeholder="Sélectionner une heure" class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white focus:border-secondary outline-none cursor-pointer">
+                        </div>
+                        <div class="p-4 bg-white/5 rounded-xl border border-white/5 text-sm text-gray-400">
+                            <i class="fa-solid fa-circle-info text-secondary mr-2"></i> Un PDF de confirmation sera généré et une notification envoyée par mail.
+                        </div>
+                    </div>
+                </div>
 
-                <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-0 pointer-events-none"></div>
-            </div>
+                <button type="submit" id="btn-agenda" class="w-full py-5 bg-gradient-to-r from-primary to-secondary text-white font-bold rounded-xl hover:shadow-[0_0_20px_rgba(122,59,224,0.4)] transition-all transform hover:scale-[1.01]">
+                    Confirmer le Rendez-vous
+                </button>
+            </form>
+
+            <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] -z-0 pointer-events-none"></div>
         </div>
-    </main>
+    </div>
+</main>
 
 <main id="page-portfolio" class="page-section pt-32 min-h-screen">
     <div class="max-w-[1400px] mx-auto px-6 mb-20 text-center">
@@ -857,7 +945,12 @@
             Sélection <span class="text-liquid">Officielle</span>
         </h1>
         <p class="text-xl text-gray-400">Une pile de nos meilleures créations.</p>
-    </div>
+		<div class="flex gap-4 justify-center mb-16" id="portfolio-filters">
+    <button onclick="filterProjects('all')" class="filter-btn active-filter px-6 py-2 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 transition">Tout</button>
+    <button onclick="filterProjects('video')" class="filter-btn px-6 py-2 rounded-full border border-white/20 hover:bg-white/20 transition">Vidéo</button>
+    <button onclick="filterProjects('branding')" class="filter-btn px-6 py-2 rounded-full border border-white/20 hover:bg-white/20 transition">Branding</button>
+    <button onclick="filterProjects('web')" class="filter-btn px-6 py-2 rounded-full border border-white/20 hover:bg-white/20 transition">Web</button>
+</div>
 
     <div class="portfolio-stack-container px-4">
 
@@ -873,6 +966,11 @@
             <div class="stack-img-container">
                 <img src="images/BMJ/1.jpg" class="stack-img" alt="Projet 1">
             </div>
+	<article class="stack-card group" onclick="openProject(0)" data-category="video">
+		</article>
+
+	<article class="stack-card group" onclick="openProject(1)" style="top: 18vh;" data-category="web">
+		</article>
         </article>
 
         <article class="stack-card group" onclick="openProject(1)" style="top: 18vh;"> <div class="stack-content bg-gradient-to-br from-[#1a1a1a] to-black">
@@ -1324,6 +1422,63 @@
             }, 500);
         }, 800);
     }
+		function initAgencyScrollReveal() {
+    const processPanel = document.getElementById('page-about');
+    if (!processPanel) return;
+
+    // Créer un élément fixe pour le titre qui va changer
+    const stickyTitle = document.createElement('div');
+    stickyTitle.id = 'sticky-process-title';
+    stickyTitle.className = 'fixed top-1/2 left-1/4 transform -translate-y-1/2 hidden lg:block z-20 text-right';
+    stickyTitle.innerHTML = `<h3 class="font-display text-4xl font-bold text-white">Diagnostic Profond</h3>`;
+    document.body.appendChild(stickyTitle);
+
+    const observerOptions = {
+        rootMargin: '0px 0px -50% 0px', // Déclenché quand le haut de l'élément atteint 50% de la fenêtre
+        threshold: 0
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const phase = entry.target.id.split('-')[1];
+                let title = "";
+
+                // Mise à jour du titre et de la couleur
+                switch (phase) {
+                    case '1': title = "Diagnostic Profond"; stickyTitle.style.color = '#CE8FFF'; break;
+                    case '2': title = "L'Architecture Invisible"; stickyTitle.style.color = '#E490FF'; break;
+                    case '3': title = "Exécution Millimétrée"; stickyTitle.style.color = '#00F0FF'; break;
+                    case '4': title = "Croissance Systématique"; stickyTitle.style.color = '#00FF94'; break;
+                    default: return;
+                }
+                stickyTitle.querySelector('h3').innerText = title;
+                // Afficher/Masquer en fonction de la visibilité de la page
+                if(document.getElementById('page-about').classList.contains('active')) {
+                     stickyTitle.classList.remove('hidden');
+                }
+            } else if (entry.boundingClientRect.top > 0) {
+                 // Cacher si on sort par le haut
+                 stickyTitle.classList.add('hidden');
+            }
+        });
+    }, observerOptions);
+
+    // Observer les quatre phases
+    document.querySelectorAll('#phase-1-trigger, #phase-2-trigger, #phase-3-trigger, #phase-4-trigger').forEach(el => {
+        observer.observe(el);
+    });
+    
+    // Gérer l'affichage/masquage lors des changements de page (important pour l'SPA)
+    window.addEventListener('hashchange', () => {
+         const isAgency = window.location.hash.includes('about');
+         if (isAgency) {
+             stickyTitle.classList.remove('hidden');
+         } else {
+             stickyTitle.classList.add('hidden');
+         }
+    });
+}
 
     // Fonction pour le bouton "Retour" Global
     function goBack() {
@@ -1675,27 +1830,45 @@
     // --- 6. EFFETS ---
 
     // A. Tilt
-    function initTilt() {
-        const cards = document.querySelectorAll('.tilt-card, .srv-card, .glass-panel, .tilt-opt');
-        
-        cards.forEach(card => {
-            card.addEventListener('mousemove', (e) => {
-                if (card.classList.contains('locked-card') || card.classList.contains('locked-panel')) return;
-                const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; 
-                const y = e.clientY - rect.top;
-                const factor = card.classList.contains('tilt-opt') ? 10 : 25;
-                const xRotate = ((y - rect.height/2) / factor) * -1;
-                const yRotate = ((x - rect.width/2) / factor);
-                card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg)`;
-            });
-            card.addEventListener('mouseleave', () => {
-                if (!card.classList.contains('locked-card') && !card.classList.contains('locked-panel')) {
-                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
-                }
-            });
+function initTilt() {
+    // Cibler tous les éléments susceptibles de bouger (y compris les panneaux)
+    const cards = document.querySelectorAll('.tilt-card, .srv-card, .glass-panel, .tilt-opt');
+    
+    cards.forEach(card => {
+        // Ajouter un attribut pour éviter de lier l'événement deux fois
+        if(card.getAttribute('data-tilt-ready') === 'true') return;
+        card.setAttribute('data-tilt-ready', 'true');
+
+        card.addEventListener('mousemove', (e) => {
+            // VERROUILLAGE PAR PAGE/ELEMENT :
+            
+            // 1. Verrouillage Devis/Sélection
+            if (card.classList.contains('locked-card') || card.classList.contains('locked-panel')) return;
+            
+            // 2. VERROUILLAGE SAISIE : Si la souris est sur un champ de formulaire ou un select/bouton
+            const targetTag = e.target.tagName;
+            if (targetTag === 'INPUT' || targetTag === 'TEXTAREA' || targetTag === 'SELECT' || targetTag === 'BUTTON') {
+                 // Remettre la carte à plat quand on survole un champ interactif
+                 card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                 return; 
+            }
+
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left; 
+            const y = e.clientY - rect.top;
+            const factor = card.classList.contains('tilt-opt') ? 10 : 25;
+            const xRotate = ((y - rect.height/2) / factor) * -1;
+            const yRotate = ((x - rect.width/2) / factor);
+            card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg)`;
         });
-    }
+
+        card.addEventListener('mouseleave', () => {
+            if (!card.classList.contains('locked-card') && !card.classList.contains('locked-panel')) {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            }
+        });
+    });
+}
 
     // B. Apple Scroll
     function initAppleScroll() {
@@ -1782,11 +1955,33 @@
     }
 
     function initCalendars() {
-        if(typeof flatpickr !== 'undefined') {
-            flatpickr("#datepicker", { minDate: "today", dateFormat: "d/m/Y", disableMobile: "true", locale: { firstDayOfWeek: 1 } });
-            flatpickr("#timepicker", { enableTime: true, noCalendar: true, dateFormat: "H:i", minTime: "08:00", maxTime: "20:00", time_24hr: true });
-        }
+    if(typeof flatpickr !== 'undefined') {
+        // Initialisation de la locale française si disponible
+        const frLocale = flatpickr.l10ns.fr; 
+
+        flatpickr("#datepicker", { 
+            minDate: "today", 
+            dateFormat: "d/m/Y", 
+            shorthandCurrentMonth: true, 
+            disableMobile: "true", 
+            theme: "dark",
+            // UTILISATION DE LA LOCALE FRANÇAISE
+            locale: frLocale 
+        });
+        
+        flatpickr("#timepicker", { 
+            enableTime: true, 
+            noCalendar: true, 
+            dateFormat: "H:i", 
+            minTime: "08:00", 
+            maxTime: "20:00", 
+            time_24hr: true,
+            theme: "dark",
+            // UTILISATION DE LA LOCALE FRANÇAISE
+            locale: frLocale 
+        });
     }
+}
 
     // Gestion Curseur
     const cursor = document.getElementById('custom-cursor');
@@ -1815,10 +2010,50 @@
         }
     }
 
+	function filterProjects(category) {
+    const cards = document.querySelectorAll('.stack-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+
+    // Mise à jour de l'état actif du bouton
+    buttons.forEach(btn => {
+        btn.classList.remove('active-filter', 'bg-white/10');
+        if (btn.textContent.toLowerCase().includes(category) || category === 'all') {
+            btn.classList.add('active-filter', 'bg-white/10');
+        }
+    });
+
+    cards.forEach(card => {
+        const cardCategory = card.getAttribute('data-category');
+        
+        // Applique l'effet de flou et de glissement (Glitch/Flou immersif)
+        if (category === 'all' || cardCategory === category) {
+            // Afficher (effet retour)
+            card.style.opacity = '1';
+            card.style.transform = card.style.transform.replace(/scale\(0\.95\)/g, 'scale(1)');
+            card.style.filter = 'blur(0px)';
+            card.style.pointerEvents = 'auto';
+            card.style.height = '70vh'; // Rétablit la hauteur sticky
+        } else {
+            // Masquer (effet de désorientation/glissement)
+            card.style.opacity = '0.3'; // Laisse une trace visible
+            card.style.transform = 'scale(0.95) ' + card.style.transform.replace(/scale\(1\)/g, ''); // Réduit légèrement
+            card.style.filter = 'blur(3px)';
+            card.style.pointerEvents = 'none';
+            card.style.height = '0'; // Cache l'espace pour ne pas bloquer le scroll
+        }
+    });
+}
+// Initialiser les filtres au chargement du portfolio
+window.addEventListener('load', () => {
+    // Si la page est déjà sur le portfolio au chargement (F5)
+    if (window.location.hash.includes('portfolio')) filterProjects('all');
+});
+
 </script>
 </body>
 <button id="global-back-btn" onclick="goBack()" class="fixed top-24 left-6 z-[60] hidden group flex items-center gap-3 px-5 py-3 rounded-full bg-black/40 border border-white/10 backdrop-blur-md hover:bg-white hover:text-black transition-all duration-300">
     <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
     <span class="font-bold text-sm uppercase tracking-widest">Retour</span>
 </button>
+<body oncontextmenu="return false;" onselectstart="return false;">
 </html>
