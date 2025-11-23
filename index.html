@@ -376,6 +376,25 @@
     top: 150px; /* Colle le texte explicatif quand on scrolle */
 }
 
+/* Force la carte sélectionnée à rester un peu plus grosse */
+.srv-card.locked-card {
+    transform: scale(1.02) !important; /* Le !important force le destin contre le JS */
+    z-index: 10;
+    box-shadow: 0 0 30px rgba(122, 59, 224, 0.2); /* Petite lueur pour dire "c'est choisi" */
+}
+
+/* --- SECURITE DEVIS (Arrêt du mouvement) --- */
+        .locked-panel {
+            transform: none !important; /* Force l'arrêt du mouvement */
+            transition: transform 0.3s ease; /* Retour au calme en douceur */
+        }
+        
+        /* Style pour les petites options qui doivent bouger */
+        .tilt-opt {
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
     </style>
 </head>
 
@@ -882,7 +901,7 @@
         <div class="max-w-[1600px] mx-auto px-6 pb-40 flex flex-col lg:flex-row gap-12">
             
             <div class="lg:w-2/3">
-                <div class="glass-panel rounded-[3rem] p-10 border border-white/10 shadow-2xl relative overflow-hidden min-h-[800px]">
+				<div id="devis-main-panel" class="glass-panel rounded-[3rem] p-10 border border-white/10 shadow-2xl relative overflow-hidden min-h-[800px]">
                     
                     <div class="flex items-center mb-16 text-sm font-mono tracking-widest uppercase text-gray-500">
                         <span class="text-primary" id="step-text-1">01. Service</span>
@@ -893,41 +912,44 @@
                     </div>
 
                     <div id="view-1" class="step-view">
-                        <h2 class="text-4xl font-display font-bold mb-10">Quel est votre objectif ?</h2>
-                        <div class="grid grid-cols-1 gap-6">
-                            <div onmouseenter="showTooltip('montage')" onclick="selectMainService('montage', this, 'primary')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-primary hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
-                                <div class="flex items-center gap-6">
-                                    <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-primary transition-colors"><i class="fa-solid fa-film"></i></div>
-                                    <div>
-                                        <h4 class="text-2xl font-bold mb-1">Post-Production</h4>
-                                        <p class="text-gray-500">Montage, VFX, Sound Design</p>
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
-                            </div>
-                            <div onmouseenter="showTooltip('branding')" onclick="selectMainService('branding', this, 'secondary')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-secondary hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
-                                <div class="flex items-center gap-6">
-                                    <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-secondary transition-colors"><i class="fa-solid fa-fingerprint"></i></div>
-                                    <div>
-                                        <h4 class="text-2xl font-bold mb-1">Identité Visuelle</h4>
-                                        <p class="text-gray-500">Logos, Chartes, Systèmes</p>
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
-                            </div>
-                            <div onmouseenter="showTooltip('miniature')" onclick="selectMainService('miniature', this, 'accent')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-accent hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
-                                <div class="flex items-center gap-6">
-                                    <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-accent transition-colors"><i class="fa-solid fa-bullseye"></i></div>
-                                    <div>
-                                        <h4 class="text-2xl font-bold mb-1">Acquisition</h4>
-                                        <p class="text-gray-500">Miniatures, Ads, A/B Tests</p>
-                                    </div>
-                                </div>
-                                <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
-                            </div>
-                        </div>
-                    </div>
+    <h2 class="text-4xl font-display font-bold mb-10">Quel est votre objectif ?</h2>
+    <div class="grid grid-cols-1 gap-6">
+        
+        <div onmouseenter="showTooltip('postprod')" onclick="selectMainService('postprod', this, 'primary')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-primary hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-primary transition-colors"><i class="fa-solid fa-film"></i></div>
+                <div>
+                    <h4 class="text-2xl font-bold mb-1 text-white">Post-Production</h4>
+                    <p class="text-gray-500">Montage, Miniatures, VFX</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
+        </div>
 
+        <div onmouseenter="showTooltip('branding')" onclick="selectMainService('branding', this, 'secondary')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-secondary hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-secondary transition-colors"><i class="fa-solid fa-pen-nib"></i></div>
+                <div>
+                    <h4 class="text-2xl font-bold mb-1 text-white">Identité Visuelle</h4>
+                    <p class="text-gray-500">Logos & Chartes Graphiques</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
+        </div>
+
+        <div onmouseenter="showTooltip('web')" onclick="selectMainService('web', this, 'accent')" class="srv-card p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-accent hover:bg-white/10 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-16 rounded-2xl bg-black/30 flex items-center justify-center text-2xl group-hover:text-accent transition-colors"><i class="fa-solid fa-globe"></i></div>
+                <div>
+                    <h4 class="text-2xl font-bold mb-1 text-white">Création Site Web</h4>
+                    <p class="text-gray-500">Vitrine, E-commerce, Landing Page</p>
+                </div>
+            </div>
+            <i class="fa-solid fa-arrow-right text-white/20 group-hover:text-white transition-colors"></i>
+        </div>
+
+    </div>
+</div>
                     <div id="view-2" class="step-view hidden">
                         <h2 class="text-3xl font-display font-bold mb-8">Détails techniques</h2>
                         <div class="space-y-8">
@@ -1117,19 +1139,71 @@
 
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>   
 <script>
-    // --- 1. CONFIGURATION (A REMPLIR) ---
+    // --- 1. CONFIGURATION ---
     const CONFIG = {
-        emailjs_service: "SERVICE_ID",      // Ton Service ID EmailJS
-        emailjs_devis: "TEMPLATE_ID_DEVIS", // Ton Template Devis ID
-        emailjs_rdv: "TEMPLATE_ID_RDV",     // Ton Template RDV ID
+        emailjs_service: "SERVICE_ID",      
+        emailjs_devis: "TEMPLATE_ID_DEVIS", 
+        emailjs_rdv: "TEMPLATE_ID_RDV",     
         my_email: "clopudymagine@gmail.com"
     };
 
-    // --- 2. INITIALISATION & LOADER ---
+    // --- 2. DONNÉES (CALC DATA) ---
+    const calcData = {
+        postprod: {
+            title: "Post-Production",
+            desc: "Transformez vos rushs en contenu viral.",
+            opts: [
+                {l:"Montage Format Court", p:80, desc:"TikTok/Reels (< 60s)"},
+                {l:"Montage Format Long", p:250, desc:"YouTube (Vlog/Docu)"},
+                {l:"Pack Miniatures", p:150, desc:"Pack de 3 miniatures CTR"},
+                {l:"Montage Publicitaire", p:400, desc:"Spot Ads haute qualité"}
+            ],
+            adds: [
+                {l:"Sous-titres dynamiques", p:30},
+                {l:"Sound Design avancé", p:80},
+                {l:"Livraison 24h", p:100},
+                {l:"Fichiers Sources", p:150}
+            ]
+        },
+        branding: {
+            title: "Identité Visuelle",
+            desc: "Donnez un visage inoubliable à votre marque.",
+            opts: [
+                {l:"Logo Starter", p:350, desc:"Logo principal + Déclinaisons"},
+                {l:"Identité Complète", p:950, desc:"Logo + Charte + Brand Book"},
+                {l:"Rebranding", p:600, desc:"Refonte d'une marque existante"}
+            ],
+            adds: [
+                {l:"Cartes de Visite", p:100},
+                {l:"Social Media Kit", p:200},
+                {l:"Signature Email", p:50},
+                {l:"Cession Droits (A vie)", p:500}
+            ]
+        },
+        web: { 
+            title: "Développement Web",
+            desc: "Une présence digitale performante et esthétique.",
+            opts: [
+                {l:"Landing Page", p:500, desc:"Une page de conversion"},
+                {l:"Site Vitrine", p:1200, desc:"Présentation (5 pages)"},
+                {l:"Site E-commerce", p:2500, desc:"Boutique en ligne complète"},
+                {l:"Portfolio Créatif", p:900, desc:"Galerie interactive"}
+            ],
+            adds: [
+                {l:"Rédaction SEO", p:300},
+                {l:"Maintenance (1 an)", p:400},
+                {l:"Installation Analytics", p:100},
+                {l:"Design Maquette (Figma)", p:400}
+            ]
+        }
+    };
+    
+    let curSel = { s: null, op: 0, add: 0, histFull: [] };
+
+    // --- 3. INITIALISATION & LOADER ---
     window.onload = function() {
         AOS.init();
         
-        // Animation du Loader Liquide
         const liquid = document.getElementById('loader-liquid');
         const text = document.getElementById('loader-text');
         const curtain = document.getElementById('page-transition-curtain');
@@ -1140,108 +1214,57 @@
             progress += Math.random() * 5;
             if (progress > 100) progress = 100;
             
-            liquid.style.height = progress + '%';
-            text.innerText = 'Initialisation... ' + Math.floor(progress) + '%';
+            if(liquid) liquid.style.height = progress + '%';
+            if(text) text.innerText = 'Initialisation... ' + Math.floor(progress) + '%';
 
             if (progress === 100) {
                 clearInterval(interval);
                 setTimeout(() => {
-                    // Fin du chargement
-                    document.getElementById('initial-loader-content').style.display = 'none';
-                    text.style.display = 'none';
-                    logo.style.display = 'block';
+                    if(document.getElementById('initial-loader-content')) 
+                        document.getElementById('initial-loader-content').style.display = 'none';
+                    if(text) text.style.display = 'none';
+                    if(logo) logo.style.display = 'block';
                     
-                    // Transition finale
                     setTimeout(() => {
-                        logo.style.opacity = '1';
-                        logo.style.transform = 'scale(1) rotate(0deg)';
+                        if(logo) {
+                            logo.style.opacity = '1';
+                            logo.style.transform = 'scale(1) rotate(0deg)';
+                        }
                     }, 100);
 
                     setTimeout(() => {
-                        curtain.classList.add('hidden-curtain');
-                        curtain.classList.remove('active');
-                        // Lancer les effets d'arrière-plan & Premium
+                        if(curtain) {
+                            curtain.classList.add('hidden-curtain');
+                            curtain.classList.remove('active');
+                        }
+                        // Lancement des scripts
                         initParticles();
                         initCalendars();
-                        initTilt();
-                        initAppleScroll(); // <-- AJOUT
-                        initCounters();    // <-- AJOUT
+                        initAppleScroll();
+                        initCounters();
+                        initTilt(); 
                     }, 1500);
                 }, 500);
             }
         }, 30);
     };
 
-    // --- 3. PARTICULES & CALENDRIER ---
-    function initParticles() {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        const container = document.getElementById('canvas-container');
-        
-        if (container) {
-            container.innerHTML = '';
-            container.appendChild(canvas);
-            let w, h, particles = [];
-            
-            const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
-            window.addEventListener('resize', resize); 
-            resize();
-
-            class Particle {
-                constructor() { this.reset(); }
-                reset() { 
-                    this.x = Math.random() * w; this.y = Math.random() * h; 
-                    this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3; 
-                    this.size = Math.random() * 3; 
-                    this.alpha = Math.random() * 0.5 + 0.1;
-                }
-                update() { 
-                    this.x += this.vx; this.y += this.vy; 
-                    if(this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.reset(); 
-                }
-                draw() { 
-                    ctx.fillStyle = `rgba(122,59,224,${this.alpha})`; 
-                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); 
-                }
-            }
-            
-            for(let i=0; i<60; i++) particles.push(new Particle());
-            const loop = () => { ctx.clearRect(0, 0, w, h); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(loop); };
-            loop();
-        }
-    }
-
-    function initCalendars() {
-        if(typeof flatpickr !== 'undefined') {
-            flatpickr("#datepicker", {
-                minDate: "today",
-                dateFormat: "d/m/Y",
-                disableMobile: "true",
-                locale: { firstDayOfWeek: 1 }
-            });
-            flatpickr("#timepicker", {
-                enableTime: true, noCalendar: true, dateFormat: "H:i",
-                minTime: "08:00", maxTime: "20:00", time_24hr: true
-            });
-        }
-    }
-
-    // --- 4. NAVIGATION & UI ---
+    // --- 4. NAVIGATION & FONCTIONS GLOBALES ---
     function routeTo(pageId) {
         const curtain = document.getElementById('page-transition-curtain');
         const currentActive = document.querySelector('.page-section.active');
         
-        // Animation rideau
-        curtain.classList.remove('hidden-curtain');
-        curtain.classList.add('active', 'nav-mode'); // nav-mode pour flou
+        if(curtain) {
+            curtain.classList.remove('hidden-curtain');
+            curtain.classList.add('active', 'nav-mode');
+        }
 
         if(currentActive) currentActive.classList.add('fading-out');
 
         setTimeout(() => {
-            // Changement de page
             document.querySelectorAll('.page-section').forEach(p => {
                 p.classList.remove('active', 'fading-out');
-                p.style.display = 'none'; // Force hide
+                p.style.display = 'none';
             });
             
             const nextPage = document.getElementById('page-' + pageId);
@@ -1253,10 +1276,11 @@
             window.scrollTo(0, 0);
             if(typeof AOS !== 'undefined') AOS.refresh();
 
-            // Relever le rideau
             setTimeout(() => {
-                curtain.classList.remove('active', 'nav-mode');
-                curtain.classList.add('hidden-curtain');
+                if(curtain) {
+                    curtain.classList.remove('active', 'nav-mode');
+                    curtain.classList.add('hidden-curtain');
+                }
             }, 500);
         }, 800);
     }
@@ -1275,140 +1299,149 @@
         }
     }
 
-    // --- 5. LOGIQUE AGENDA (FONCTIONNELLE) ---
-    function bookAppointment() {
-        const name = document.getElementById('rdv-name').value;
-        const email = document.getElementById('rdv-email').value;
-        const date = document.getElementById('datepicker').value;
-        const time = document.getElementById('timepicker').value;
-        const subject = document.getElementById('rdv-subject').value;
-        const btn = document.getElementById('btn-agenda');
+    // --- 5. LOGIQUE DEVIS (CŒUR DU SYSTÈME) ---
 
-        if(!name || !email || !date || !time) { alert("Veuillez remplir tous les champs."); return; }
-
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Traitement...';
-
-        // Génération PDF
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+    // A. Changement de Vue & Verrouillage
+    function switchView(n) {
+        // Vues
+        document.querySelectorAll('.step-view').forEach(v => v.classList.add('hidden'));
+        const view = document.getElementById('view-'+n);
+        if(view) view.classList.remove('hidden');
         
-        doc.setFillColor(3, 3, 4); doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255, 255, 255); doc.setFontSize(22); doc.text("CloudyMagine", 15, 25);
-        doc.setFontSize(12); doc.text("CONFIRMATION DE RENDEZ-VOUS", 15, 60);
-        
-        doc.setTextColor(0,0,0);
-        doc.text(`Bonjour ${name},`, 15, 80);
-        doc.text(`Votre rendez-vous est confirmé.`, 15, 90);
-        doc.setLineWidth(0.5); doc.line(15, 95, 195, 95);
-        
-        doc.setFont("helvetica", "bold");
-        doc.text(`Date : ${date}`, 15, 110);
-        doc.text(`Heure : ${time}`, 15, 120);
-        doc.text(`Sujet : ${subject}`, 15, 130);
-        
-        doc.setFont("helvetica", "normal");
-        doc.text("Lieu : Google Meet (Le lien vous sera envoyé ultérieurement)", 15, 150);
+        // Header
+        [1,2,3].forEach(i => {
+            const el = document.getElementById('step-text-'+i);
+            if(el) el.className = n>=i ? "text-primary transition-colors duration-300" : "text-gray-500 transition-colors duration-300";
+        });
 
-        // Envoi Email
-        const templateParams = {
-            client_name: name,
-            client_email: email,
-            agency_email: CONFIG.my_email,
-            rdv_date: date,
-            rdv_time: time,
-            rdv_subject: subject
-        };
-
-        emailjs.send(CONFIG.emailjs_service, CONFIG.emailjs_rdv, templateParams)
-            .then(function() {
-                doc.save(`Rdv_CloudyMagine_${date.replace(/\//g,'-')}.pdf`);
-                alert("Rendez-vous confirmé ! Vérifiez vos mails.");
-                btn.innerHTML = 'Confirmer le Rendez-vous';
-                document.getElementById('agenda-form').reset();
-            }, function(error) {
-                alert("Erreur système : " + JSON.stringify(error));
-                btn.innerHTML = 'Réessayer';
-            });
+        // Verrouillage Panneau (Fix demandé)
+        const mainPanel = document.getElementById('devis-main-panel');
+        if(mainPanel) {
+            if (n > 1) {
+                mainPanel.classList.add('locked-panel');
+                mainPanel.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            } else {
+                mainPanel.classList.remove('locked-panel');
+            }
+        }
     }
 
-    // --- 6. LOGIQUE DEVIS (CALCULATEUR) ---
-    const calcData = {
-        montage: {
-            title: "Post-Production",
-            desc: "Nous transformons vos rushs en récits captivants.",
-            opts: [
-                {l:"Format Court (Reels/TikTok)", p:80, desc:"< 60s, dynamique"},
-                {l:"Format Long (YouTube)", p:250, desc:"> 10min, storytelling"},
-                {l:"Spot Publicitaire", p:500, desc:"Broadcast Quality"}
-            ],
-            adds: [
-                {l:"Sous-titres animés", p:50, desc:"Style dynamique"},
-                {l:"Fichiers Sources", p:150, desc:"Projet .prproj"},
-                {l:"Export 4K", p:100, desc:"Ultra HD"}
-            ]
-        },
-        branding: {
-            title: "Identité Visuelle",
-            desc: "Création de systèmes graphiques cohérents.",
-            opts: [
-                {l:"Logo Starter", p:300, desc:"Logo + Couleurs"},
-                {l:"Identité Complète", p:800, desc:"Charte + Typo"},
-                {l:"System Design", p:1500, desc:"Univers 360°"}
-            ],
-            adds: [
-                {l:"Social Media Kit", p:200, desc:"Templates Canva"},
-                {l:"Carte de Visite", p:100, desc:"Prêt à imprimer"},
-                {l:"Brand Guidelines", p:250, desc:"PDF explicatif"}
-            ]
-        },
-        miniature: {
-            title: "Acquisition (CTR)",
-            desc: "Design scientifique pour maximiser le taux de clic.",
-            opts: [
-                {l:"Pack 1 Miniature", p:50, desc:"Haute qualité"},
-                {l:"Pack 5 Miniatures", p:200, desc:"Série cohérente"},
-                {l:"Pack 10 Miniatures", p:350, desc:"Usage régulier"}
-            ],
-            adds: [
-                {l:"Fichiers PSD", p:50, desc:"Calques editables"},
-                {l:"Déclinaison A/B", p:40, desc:"Test CTR"},
-                {l:"Format Story", p:30, desc:"Adaptation verticale"}
-            ]
+    // B. Mise à jour Assistant
+    function updateAssistant(title, desc) {
+        const defaultPanel = document.getElementById('help-default');
+        const contentPanel = document.getElementById('help-content');
+        
+        if(defaultPanel) defaultPanel.style.display = 'none';
+        if(contentPanel) {
+            contentPanel.classList.remove('hidden');
+            contentPanel.style.opacity = '1';
         }
-    };
-    
-    let curSel = { s: null, op: 0, add: 0, histFull: [] };
 
+        const tEl = document.getElementById('help-title');
+        const dEl = document.getElementById('help-desc');
+        const iEl = document.getElementById('help-icon');
+        
+        if(tEl) tEl.innerText = title;
+        if(dEl) dEl.innerText = desc;
+        if(iEl) iEl.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+    }
+
+    // C. Helper pour afficher info service principal
+    function showTooltip(key) {
+        if (!calcData[key]) return;
+        const defaultPanel = document.getElementById('help-default');
+        const contentPanel = document.getElementById('help-content');
+        
+        if(defaultPanel) defaultPanel.style.display = 'none';
+        if(contentPanel) contentPanel.classList.remove('hidden');
+        
+        setTimeout(() => {
+            if(contentPanel) contentPanel.style.opacity = '1';
+            const tEl = document.getElementById('help-title');
+            const dEl = document.getElementById('help-desc');
+            const iEl = document.getElementById('help-icon');
+
+            if(tEl) tEl.innerText = calcData[key].title;
+            if(dEl) dEl.innerText = calcData[key].desc;
+            
+            let icon = '';
+            if(key === 'postprod') icon = '<i class="fa-solid fa-film"></i>';
+            if(key === 'branding') icon = '<i class="fa-solid fa-pen-nib"></i>';
+            if(key === 'web') icon = '<i class="fa-solid fa-globe"></i>';
+            if(iEl) iEl.innerHTML = icon;
+        }, 50);
+    }
+
+    // D. Sélection Service & Génération Options
     function selectMainService(key, el, color) {
         curSel.s = key; curSel.op = 0; curSel.add = 0; curSel.histFull = [];
+
+        // Reset cartes
         document.querySelectorAll('.srv-card').forEach(c => {
             c.className = "srv-card p-8 rounded-3xl bg-white/5 border border-white/10 transition-all cursor-pointer flex items-center justify-between group";
-        });
-        el.classList.add(`border-${color}`, 'bg-white/10');
-
-        const optsDiv = document.getElementById('inject-options'); optsDiv.innerHTML = '';
-        calcData[key].opts.forEach((o, i) => {
-            const checked = i === 0 ? 'checked' : '';
-            optsDiv.innerHTML += `
-                <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center cursor-pointer hover:bg-white/10" onclick="this.querySelector('input').click()">
-                    <div><div class="font-bold text-sm">${o.l}</div><div class="text-xs text-gray-500">${o.desc}</div></div>
-                    <div class="flex gap-2"><span class="font-mono font-bold">${o.p}€</span><input type="radio" name="main_opt" value="${o.p}" data-label="${o.l}" ${checked} onchange="recalc()"></div>
-                </div>`;
+            c.classList.remove('locked-card'); 
+            c.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            c.style.opacity = '0.5';
         });
 
-        const addsDiv = document.getElementById('inject-addons'); addsDiv.innerHTML = '';
-        calcData[key].adds.forEach((a) => {
-            addsDiv.innerHTML += `
-                <div class="p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center cursor-pointer hover:bg-white/10" onclick="this.querySelector('input').click()">
-                    <div class="text-sm text-gray-300">${a.l}</div>
-                    <div class="flex gap-2"><span class="text-gray-500">+${a.p}€</span><input type="checkbox" value="${a.p}" data-label="${a.l}" onchange="recalc()"></div>
-                </div>`;
-        });
+        // Active carte
+        el.classList.add(`border-${color}`, 'bg-white/10', 'locked-card');
+        el.style.opacity = '1';
+        el.style.transform = 'scale(1.02)';
+
+        const view2Title = document.querySelector('#view-2 h2');
+        if(view2Title) view2Title.innerText = "Précision du service";
+
+        // Options
+        const optsDiv = document.getElementById('inject-options'); 
+        if(optsDiv) {
+            optsDiv.innerHTML = '';
+            if (calcData[key]) {
+                calcData[key].opts.forEach((o, i) => {
+                    const checked = i === 0 ? 'checked' : '';
+                    const safeDesc = o.desc.replace(/'/g, "\\'"); 
+                    optsDiv.innerHTML += `
+                        <div class="tilt-opt p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center cursor-pointer hover:bg-white/10 transition-colors relative z-10" 
+                             onclick="this.querySelector('input').click()"
+                             onmouseenter="updateAssistant('${o.l}', '${safeDesc}')">
+                            <div>
+                                <div class="font-bold text-sm text-white">${o.l}</div>
+                                <div class="text-xs text-gray-500">${o.desc}</div>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <span class="font-mono font-bold text-primary">${o.p}€</span>
+                                <input type="radio" name="main_opt" value="${o.p}" data-label="${o.l}" ${checked} onchange="recalc()">
+                            </div>
+                        </div>`;
+                });
+
+                const addsDiv = document.getElementById('inject-addons'); 
+                if(addsDiv) {
+                    addsDiv.innerHTML = '';
+                    calcData[key].adds.forEach((a) => {
+                        addsDiv.innerHTML += `
+                            <div class="tilt-opt p-4 rounded-xl bg-white/5 border border-white/10 flex justify-between items-center cursor-pointer hover:bg-white/10 transition-colors relative z-10" 
+                                 onclick="this.querySelector('input').click()"
+                                 onmouseenter="updateAssistant('${a.l}', 'Option supplémentaire.')">
+                                <div class="text-sm text-gray-300">${a.l}</div>
+                                <div class="flex gap-2 items-center">
+                                    <span class="text-gray-500 text-xs">+${a.p}€</span>
+                                    <input type="checkbox" value="${a.p}" data-label="${a.l}" onchange="recalc()">
+                                </div>
+                            </div>`;
+                    });
+                }
+            }
+        }
 
         recalc(); 
-        setTimeout(() => switchView(2), 200);
+        setTimeout(() => {
+            initTilt(); 
+            switchView(2);
+        }, 100);
     }
 
+    // E. Calcul
     function recalc() {
         const main = document.querySelector('input[name="main_opt"]:checked');
         curSel.histFull = [];
@@ -1424,29 +1457,25 @@
         curSel.add = adds;
     }
 
-    function switchView(n) {
-        document.querySelectorAll('.step-view').forEach(v => v.classList.add('hidden'));
-        document.getElementById('view-'+n).classList.remove('hidden');
-        [1,2,3].forEach(i => {
-            const el = document.getElementById('step-text-'+i);
-            if(el) el.className = n>=i ? "text-primary" : "text-gray-500";
-        });
-    }
-
+    // F. Résumé (Vue 3)
     function computeSummary() {
         recalc();
         const total = curSel.op + curSel.add;
-        document.getElementById('final-service-name').innerText = curSel.s ? calcData[curSel.s].title : "--";
-        document.getElementById('final-price').innerText = total + " €";
-        const list = document.getElementById('final-recap-list'); list.innerHTML = '';
-        curSel.histFull.forEach(item => { 
-            list.innerHTML += `<div class="flex justify-between border-b border-white/5 py-1"><span>${item.label}</span><span>${item.price}</span></div>`; 
-        });
+        const svcName = document.getElementById('final-service-name');
+        const prc = document.getElementById('final-price');
+        const list = document.getElementById('final-recap-list');
+
+        if(svcName) svcName.innerText = curSel.s ? calcData[curSel.s].title : "--";
+        if(prc) prc.innerText = total + " €";
+        if(list) {
+            list.innerHTML = '';
+            curSel.histFull.forEach(item => { 
+                list.innerHTML += `<div class="flex justify-between border-b border-white/5 py-1"><span>${item.label}</span><span>${item.price}</span></div>`; 
+            });
+        }
     }
 
-    function showTooltip(key) { /* Simplifié pour stabilité */ }
-
-    // --- 7. ENVOI DEVIS ---
+    // G. Envoi Devis
     function submitFinal() {
         const btn = document.querySelector('#view-3 button');
         const email = document.getElementById('contact-email').value;
@@ -1458,33 +1487,23 @@
         const total = curSel.op + curSel.add;
         const date = new Date().toLocaleDateString('fr-FR');
 
-        // Construction PDF Simple et Robuste
         doc.setFillColor(3,3,4); doc.rect(0,0,210,40,'F');
         doc.setTextColor(255); doc.setFontSize(20); doc.text("CloudyMagine", 15, 25);
         doc.setTextColor(0); doc.setFontSize(12); doc.text("ESTIMATION DE PROJET", 15, 60);
         doc.text("Client : " + email, 15, 70);
         
         let y = 90;
-        doc.setFillColor(200,200,200); doc.rect(15, y-5, 180, 8, 'F');
-        doc.text("Description", 20, y); doc.text("Prix", 170, y);
-        y += 10;
-        
         curSel.histFull.forEach(item => {
-            doc.text(item.label, 20, y);
-            doc.text(item.price, 170, y);
+            doc.text(item.label + " : " + item.price, 20, y);
             y += 8;
         });
-        
-        doc.setFontSize(16); doc.text("TOTAL: " + total + " EUR", 140, y + 15);
+        doc.setFontSize(16); doc.text("TOTAL: " + total + " EUR", 20, y + 15);
 
-        // Données Email
-        let details = curSel.histFull.map(i => `- ${i.label} (${i.price})`).join('\n');
-        
         const params = {
             client_email: email,
             agency_email: CONFIG.my_email,
             client_name: "Client Web",
-            project_details: details,
+            project_details: "Devis PDF généré",
             total_price: total + " €",
             date: date
         };
@@ -1496,152 +1515,91 @@
                 routeTo('home');
                 btn.innerHTML = 'Terminé';
             }, (err) => {
-                alert("Erreur: " + JSON.stringify(err));
+                alert("Erreur");
                 btn.innerHTML = 'Réessayer';
             });
     }
 
-    // --- 8. DETAILS VISUELS (TILT & CURSOR) ---
+    // --- 6. EFFETS VISUELS & INTERACTIFS ---
+
+    // A. Tilt 3D (Sécurisé & Complet)
     function initTilt() {
-    // On cible les cartes, mais aussi les panneaux verre
-    const cards = document.querySelectorAll('.tilt-card, .srv-card, .glass-panel');
-    
-    cards.forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            // --- NOUVEAU : Si la carte est "verrouillée" (sélectionnée), on arrête tout ---
-            if (card.classList.contains('locked-card')) {
-                card.style.transform = 'scale(1.02)'; // On la garde juste un peu grossie, mais plate
-                return; 
-            }
-
-            const rect = card.getBoundingClientRect();
-            // Calcul de la position de la souris relative à la carte
-            const x = e.clientX - rect.left; 
-            const y = e.clientY - rect.top;
-            
-            // Calcul des angles (divisé par 20 pour adoucir l'effet)
-            const xRotate = ((y - rect.height/2) / 20) * -1;
-            const yRotate = ((x - rect.width/2) / 20);
-            
-            // Application de la 3D
-            card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg) scale(1.02)`;
-        });
-
-        card.addEventListener('mouseleave', () => {
-            // Quand on sort, on remet à plat (sauf si verrouillée, on laisse gérer par le clic)
-            if (!card.classList.contains('locked-card')) {
-                card.style.transform = 'none';
-            }
-        });
-    });
-}
-
-    // Gestion Curseur
-    const cursor = document.getElementById('custom-cursor');
-    if(cursor) {
-        document.addEventListener('mousemove', e => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-    }
-    
-    // Fonctions manquantes (Chat, Login, etc.) - Versions simplifiées pour éviter erreurs
-    function toggleLoginModal() { 
-        const m = document.getElementById('login-modal'); 
-        m.classList.toggle('hidden'); setTimeout(() => m.classList.toggle('opacity-0'), 10);
-    }
-    function loginClient() { toggleLoginModal(); routeTo('home'); alert("Bienvenue dans l'espace client (Demo)"); }
-    function toggleChat() { 
-        const w = document.getElementById('chat-window'); 
-        w.classList.toggle('hidden'); setTimeout(()=> { w.classList.toggle('opacity-0'); w.classList.toggle('translate-y-4'); }, 10);
-    }
-    function handleChatInput(enter) {
-        const inp = document.getElementById('chatbot-input');
-        if(!inp.value) return;
-        const chat = document.getElementById('chat-body');
-        chat.innerHTML += `<div class="flex justify-end mb-2"><div class="bg-primary/20 p-2 rounded-xl text-sm">${inp.value}</div></div>`;
-        setTimeout(() => {
-            chat.innerHTML += `<div class="flex justify-start mb-2"><div class="bg-white/10 p-2 rounded-xl text-sm">Je suis une IA de démo. Contactez l'agence pour une vraie réponse !</div></div>`;
-            chat.scrollTop = chat.scrollHeight;
-        }, 500);
-        inp.value = '';
-    }
-    function toggleAudio() { alert("Audio activé (simulation)"); }
-
-// --- GESTION PROJET ---
-function openProject(i) {
-    // Plus d'alert() ici !
-    
-    // Ici, plus tard, on pourra ajouter du code pour charger 
-    // les textes et images spécifiques au projet 'i'.
-    // Pour l'instant, on ouvre juste la page modèle.
-    
-    routeTo('project-view'); 
-}
-	
-// --- 9. EFFETS PREMIUM (APPLE SCROLL & COMPTEURS) ---
-
-    // Effet Z-Scroll (Zoom au défilement)
-    // Remplace l'ancienne fonction initAppleScroll() par celle-ci :
-
-	function initAppleScroll() {
-    const heroImage = document.querySelector('.hero-zoom-target');
-    const heroText = document.querySelector('.hero-text-target'); // Cible le texte
-    const heroSection = document.querySelector('.hero-section-container');
-    
-    if (!heroImage || !heroSection) return;
-
-    window.addEventListener('scroll', () => {
-        // Optimisation : On ne calcule rien si on n'est pas sur la Home
-        if(document.getElementById('page-home').style.display === 'none') return;
-
-        const scrollPosition = window.scrollY;
-        const windowHeight = window.innerHeight;
+        const cards = document.querySelectorAll('.tilt-card, .srv-card, .glass-panel, .tilt-opt');
         
-        if (scrollPosition > windowHeight) return;
-
-        // --- 1. Animation IMAGE (Fond) ---
-        // Zoom lent (1.5x max)
-        const bgScale = 1 + (scrollPosition * 0.0005); 
-        heroImage.style.transform = `scale(${bgScale})`;
-
-        // --- 2. Animation TEXTE (Premier Plan) ---
-        if(heroText) {
-            // Le texte zoome BEAUCOUP plus vite pour simuler la proximité (3D)
-            const textScale = 1 + (scrollPosition * 0.0002); 
+        cards.forEach(card => {
+            // Astuce pour nettoyer les events: cloner le nœud remet à zéro les listeners
+            // Mais attention, ça casse les onclicks inline s'ils ne sont pas robustes.
+            // Ici on va utiliser une approche simple : on laisse s'empiler car 'mousemove' n'est pas très lourd,
+            // ou mieux : on vérifie une classe.
             
-            // Le texte devient flou en s'approchant (Cinematic Blur)
-            const blurValue = Math.min(scrollPosition * 0.02, 10); // Max 10px de flou
-            
-            // Le texte s'estompe rapidement pour ne pas gêner la suite
-            const textOpacity = 1 - (scrollPosition / (windowHeight * 0.6));
+            card.addEventListener('mousemove', (e) => {
+                if (card.classList.contains('locked-card') || card.classList.contains('locked-panel')) return;
 
-            // On applique aussi un translate Y négatif pour contrer le scroll naturel
-            // Cela donne l'impression que le texte flotte au milieu pendant qu'on avance
-            const translateY = scrollPosition * 0.5; 
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;
+                
+                const factor = card.classList.contains('tilt-opt') ? 10 : 25;
 
-            heroText.style.transform = `scale(${textScale}) translateY(${translateY}px)`;
-            heroText.style.filter = `blur(${blurValue}px)`;
-            heroText.style.opacity = Math.max(0, textOpacity);
-        }
-    });
-}
+                const xRotate = ((y - rect.height/2) / factor) * -1;
+                const yRotate = ((x - rect.width/2) / factor);
+                
+                card.style.transform = `perspective(1000px) rotateX(${xRotate}deg) rotateY(${yRotate}deg)`;
+            });
 
-    // Compteurs Dynamiques (0 à 2M+)
+            card.addEventListener('mouseleave', () => {
+                if (!card.classList.contains('locked-card') && !card.classList.contains('locked-panel')) {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+                }
+            });
+        });
+    }
+
+    // B. Apple Z-Scroll
+    function initAppleScroll() {
+        const heroImage = document.querySelector('.hero-zoom-target');
+        const heroText = document.querySelector('.hero-text-target'); 
+        const heroSection = document.querySelector('.hero-section-container');
+        
+        if (!heroImage || !heroSection) return;
+
+        window.addEventListener('scroll', () => {
+            if(document.getElementById('page-home').style.display === 'none') return;
+
+            const scrollPosition = window.scrollY;
+            const windowHeight = window.innerHeight;
+            if (scrollPosition > windowHeight) return;
+
+            const bgScale = 1 + (scrollPosition * 0.0005); 
+            heroImage.style.transform = `scale(${bgScale})`;
+
+            if(heroText) {
+                const textScale = 1 + (scrollPosition * 0.0002); 
+                const blurValue = Math.min(scrollPosition * 0.02, 10); 
+                const textOpacity = 1 - (scrollPosition / (windowHeight * 0.6));
+                const translateY = scrollPosition * 0.5; 
+                
+                heroText.style.transform = `scale(${textScale}) translateY(${translateY}px)`;
+                heroText.style.filter = `blur(${blurValue}px)`;
+                heroText.style.opacity = Math.max(0, textOpacity);
+            }
+        });
+    }
+
+    // C. Compteurs
     function initCounters() {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const el = entry.target;
-                    // Eviter de relancer si déjà fait
                     if(el.dataset.animated) return;
                     
-                    const rawText = el.innerText; // ex: "2M+"
-                    const target = parseFloat(rawText.replace(/[^0-9.]/g, '')); // ex: 2
-                    const suffix = rawText.replace(/[0-9.]/g, ''); // ex: "M+"
+                    const rawText = el.innerText;
+                    const target = parseFloat(rawText.replace(/[^0-9.]/g, ''));
+                    const suffix = rawText.replace(/[0-9.]/g, '');
                     
                     let current = 0;
-                    const duration = 2000; // 2 secondes
+                    const duration = 2000;
                     const stepTime = 20;
                     const increment = target / (duration / stepTime);
                     
@@ -1652,20 +1610,68 @@ function openProject(i) {
                             el.dataset.animated = "true";
                             clearInterval(timer);
                         } else {
-                            // Gestion des entiers ou décimales
                             let val = Number.isInteger(target) ? Math.ceil(current) : current.toFixed(1);
                             el.innerText = val + suffix;
                         }
                     }, stepTime);
-                    
                     observer.unobserve(el);
                 }
             });
-        }, { threshold: 0.5 }); // Déclenche quand 50% visible
-
-        // On cible les gros chiffres de la section stats
+        }, { threshold: 0.5 });
         document.querySelectorAll('#page-home .text-5xl').forEach(el => observer.observe(el));
     }
+
+    // D. Particules & Autres
+    function initParticles() {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('canvas-container');
+        if (container) {
+            container.innerHTML = '';
+            container.appendChild(canvas);
+            let w, h, particles = [];
+            const resize = () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; };
+            window.addEventListener('resize', resize); resize();
+            class Particle {
+                constructor() { this.reset(); }
+                reset() { this.x = Math.random() * w; this.y = Math.random() * h; this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3; this.size = Math.random() * 3; this.alpha = Math.random() * 0.5 + 0.1; }
+                update() { this.x += this.vx; this.y += this.vy; if(this.x < 0 || this.x > w || this.y < 0 || this.y > h) this.reset(); }
+                draw() { ctx.fillStyle = `rgba(122,59,224,${this.alpha})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+            }
+            for(let i=0; i<60; i++) particles.push(new Particle());
+            const loop = () => { ctx.clearRect(0, 0, w, h); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(loop); };
+            loop();
+        }
+    }
+
+    function initCalendars() {
+        if(typeof flatpickr !== 'undefined') {
+            flatpickr("#datepicker", { minDate: "today", dateFormat: "d/m/Y", disableMobile: "true", locale: { firstDayOfWeek: 1 } });
+            flatpickr("#timepicker", { enableTime: true, noCalendar: true, dateFormat: "H:i", minTime: "08:00", maxTime: "20:00", time_24hr: true });
+        }
+    }
+
+    function bookAppointment() {
+        alert("Fonction Agenda : Veuillez vérifier votre configuration EmailJS.");
+    }
+
+    // Gestion Curseur
+    const cursor = document.getElementById('custom-cursor');
+    if(cursor) {
+        document.addEventListener('mousemove', e => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+    }
+
+    // Fonctions simples
+    function toggleLoginModal() { const m = document.getElementById('login-modal'); m.classList.toggle('hidden'); setTimeout(() => m.classList.toggle('opacity-0'), 10); }
+    function loginClient() { toggleLoginModal(); routeTo('home'); alert("Bienvenue dans l'espace client (Demo)"); }
+    function toggleChat() { const w = document.getElementById('chat-window'); w.classList.toggle('hidden'); setTimeout(()=> { w.classList.toggle('opacity-0'); w.classList.toggle('translate-y-4'); }, 10); }
+    function handleChatInput(enter) { const inp = document.getElementById('chatbot-input'); if(!inp.value) return; inp.value = ''; }
+    function toggleAudio() { alert("Audio activé (simulation)"); }
+    function openProject(i) { routeTo('project-view'); }
+
 </script>
 </body>
 </html>
